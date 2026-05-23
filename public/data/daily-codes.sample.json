@@ -1,0 +1,32 @@
+{
+  "updatedAt": "2026-05-23T02:00:00.000Z",
+  "dataDate": "5月23日",
+  "status": "ok",
+  "source": { "name": "示例数据 SAMPLE（非真实密码）", "url": "https://api.suyanw.cn/api/delta_mima.php", "homepage": "https://api.suyanw.cn/doc/delta_mima.php", "server": "cn" },
+  "note": "这是用于预览版面的示例数据，密码为占位、非真实。预览：把本文件内容复制到 daily-codes.json。",
+  "maps": [
+    {
+      "map": "零号大坝", "code": "MAP-01", "en": "Zero Dam",
+      "rooms": [
+        { "room": "工地密码门", "location": "主变电站右侧地下管道尽头", "password": "0000", "images": [] },
+        { "room": "行政楼保险室", "location": "二楼东侧办公室", "password": "0000", "images": [] }
+      ]
+    },
+    {
+      "map": "长弓溪谷", "code": "MAP-02", "en": "Layali Grove",
+      "rooms": [{ "room": "雷达站机房", "location": "高地主控塔", "password": "0000", "images": [] }]
+    },
+    {
+      "map": "巴克什", "code": "MAP-03", "en": "Brakkesh",
+      "rooms": [{ "room": "哈曼浴场密码门", "location": "浴场北侧", "password": "0000", "images": [] }]
+    },
+    {
+      "map": "航天基地", "code": "MAP-04", "en": "Space City",
+      "rooms": [{ "room": "组装车间", "location": "工业区 2F", "password": "0000", "images": [] }]
+    },
+    {
+      "map": "潮汐监狱", "code": "MAP-05", "en": "Tide Prison",
+      "rooms": [{ "room": "监狱行政区", "location": "1楼大厅楼梯拐角处", "password": "0000", "images": [] }]
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* ====== 军事战术 HUD 设计令牌 ====== */
+@theme {
+  --color-bg: #0a0d08;
+  --color-card: #11150f;
+  --color-card2: #161b13;
+  --color-line: #2a3023;
+  --color-line-bright: #3d4632;
+  --color-text: #d8d4c4;
+  --color-dim: #8a8775;
+  --color-faint: #5a584d;
+  --color-accent: #f5a623;
+  --color-accent-dim: #a87217;
+  --color-hot: #e34b3a;
+  --color-cool: #4a8c6f;
+  --color-safe: #6b8e3d;
+
+  --font-display: "Oswald", "Noto Sans SC", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-body: "Noto Sans SC", sans-serif;
+
+  --animate-pulse-dot: pulse-dot 2s infinite;
+  --animate-blink: blink 1.4s infinite;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* ====== 战术网格 + 扫描线 + 噪点背景 ====== */
+.tactical-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 166, 35, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 166, 35, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+.tactical-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top, rgba(245, 166, 35, 0.04) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(0, 0, 0, 0.15) 3px, rgba(0, 0, 0, 0.15) 4px);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* 内容层级置于背景之上 */
+#root {
+  position: relative;
+  z-index: 2;
+}
+
+/* HUD 面板的四角描边（可复用工具类） */
+.hud-corner {
+  position: relative;
+}
+.hud-corner::before,
+.hud-corner::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+.hud-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-accent);
+  border-left: 2px solid var(--color-accent);
+}
+.hud-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-accent);
+  border-right: 2px solid var(--color-accent);
+}
+
+/* 切角按钮 / 卡片 */
+.clip-tactical {
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+/* 隐藏滚动条（横向走马灯/标签滚动用） */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}

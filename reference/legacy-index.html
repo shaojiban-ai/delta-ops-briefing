@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="zh-CN" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTI 作战简报 // 三角洲国际服攻略</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d08;
+    --bg-card: #11150f;
+    --bg-card-2: #161b13;
+    --line: #2a3023;
+    --line-bright: #3d4632;
+    --text: #d8d4c4;
+    --text-dim: #8a8775;
+    --text-faint: #5a584d;
+    --accent: #f5a623;
+    --accent-dim: #a87217;
+    --hot: #e34b3a;
+    --cool: #4a8c6f;
+    --safe: #6b8e3d;
+    --font-display: 'Oswald', 'Noto Sans SC', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Noto Sans SC', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* 战术网格背景 + 扫描线 + 噪点 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245, 166, 35, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245, 166, 35, 0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at top, rgba(245, 166, 35, 0.04) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px);
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  main, header, footer { position: relative; z-index: 2; }
+
+  /* 顶部状态栏 */
+  .status-bar {
+    border-bottom: 1px solid var(--line);
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 8px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .status-bar .left { display: flex; gap: 24px; align-items: center; }
+  .status-bar .right { display: flex; gap: 16px; align-items: center; }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--safe);
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 8px var(--safe);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* 主头部 */
+  header {
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: end;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand-mark {
+    width: 56px; height: 56px;
+    border: 2px solid var(--accent);
+    position: relative;
+    display: grid;
+    place-items: center;
+    transform: rotate(45deg);
+    background: rgba(245, 166, 35, 0.08);
+  }
+  .brand-mark::before, .brand-mark::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+  }
+  .brand-mark::before { width: 70%; height: 2px; }
+  .brand-mark::after { width: 2px; height: 70%; }
+
+  .brand-text h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .brand-text .sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  nav.primary {
+    display: flex;
+    gap: 28px;
+    justify-self: end;
+  }
+  nav.primary a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  nav.primary a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  nav.primary a.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .search-pill {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 0 16px;
+    height: 42px;
+    max-width: 480px;
+  }
+  .search-pill input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+  .search-pill input::placeholder { color: var(--text-faint); }
+  .search-pill .key-hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    border: 1px solid var(--line-bright);
+    padding: 2px 6px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 56px 48px 40px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h2 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+  .hero h2 .highlight {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .hero h2 .strike {
+    position: relative;
+    display: inline-block;
+  }
+  .hero h2 .strike::after {
+    content: '';
+    position: absolute;
+    left: -4px; right: -4px;
+    top: 50%;
+    height: 4px;
+    background: var(--hot);
+    transform: skewY(-2deg);
+  }
+  .hero p.lede {
+    margin-top: 20px;
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 540px;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--bg);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  }
+  .btn:hover { background: #ffb733; }
+  .btn.ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line-bright);
+  }
+  .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-arrow { font-family: var(--font-mono); }
+
+  /* HUD 信息块 */
+  .hud-panel {
+    border: 1px solid var(--line);
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-2) 100%);
+    padding: 24px;
+    position: relative;
+    font-family: var(--font-mono);
+  }
+  .hud-panel::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 24px; height: 24px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+  .hud-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 24px; height: 24px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+  .hud-title {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .hud-title .blink {
+    color: var(--hot);
+    animation: blink 1.4s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hud-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .hud-row:last-child { border-bottom: none; }
+  .hud-row .key { color: var(--text-dim); }
+  .hud-row .val { color: var(--text); font-weight: 500; }
+  .hud-row .val.up { color: var(--safe); }
+  .hud-row .val.down { color: var(--hot); }
+
+  /* SECTION 通用 */
+  section { padding: 64px 48px; border-bottom: 1px solid var(--line); }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .section-head h3 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .section-head .index {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    margin-bottom: 8px;
+  }
+  .section-head .see-all {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--line-bright);
+  }
+  .section-head .see-all:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* 地图卡片 */
+  .map-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .map-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 0;
+    position: relative;
+    transition: all 0.25s;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .map-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .map-card:hover .map-art { transform: scale(1.04); }
+
+  .map-art {
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+    background: #1a1f15;
+  }
+  /* SVG 地形示意 */
+  .map-card .map-art svg { width: 100%; height: 100%; display: block; }
+
+  .map-info {
+    padding: 18px 20px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .map-info .name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .map-info h4 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .map-info .code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+  .map-info .meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(245, 166, 35, 0.1);
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-dim);
+  }
+  .tag.hot { background: rgba(227, 75, 58, 0.12); color: var(--hot); border-color: rgba(227, 75, 58, 0.4); }
+  .tag.cool { background: rgba(74, 140, 111, 0.1); color: var(--cool); border-color: rgba(74, 140, 111, 0.4); }
+  .map-info .desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .difficulty {
+    margin-top: 14px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .diff-bar {
+    display: inline-flex;
+    gap: 2px;
+    margin-left: 8px;
+  }
+  .diff-bar span {
+    width: 14px; height: 4px;
+    background: var(--line-bright);
+  }
+  .diff-bar span.on { background: var(--accent); }
+  .diff-bar span.on.hot { background: var(--hot); }
+
+  /* 模块/玩法导航 */
+  .modes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--line);
+  }
+  .mode-card {
+    padding: 32px 28px;
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.25s;
+    position: relative;
+  }
+  .mode-card:last-child { border-right: none; }
+  .mode-card:hover { background: var(--bg-card); }
+  .mode-card:hover .mode-num { color: var(--accent); }
+
+  .mode-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-faint);
+    letter-spacing: 0.2em;
+    margin-bottom: 14px;
+    transition: color 0.2s;
+  }
+  .mode-card h4 {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .mode-card .en {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    margin-bottom: 16px;
+  }
+  .mode-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* 武器配装 */
+  .loadout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .loadout-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 20px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .loadout-card:hover { border-color: var(--accent); background: var(--bg-card-2); }
+
+  .loadout-card .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .loadout-card h5 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .loadout-card .tier {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    border: 1px solid var(--accent);
+  }
+  .stats { margin: 12px 0 8px; }
+  .stat-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 30px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .stat-row .label { color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .stat-bar {
+    background: var(--line);
+    height: 4px;
+    overflow: hidden;
+  }
+  .stat-bar > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--cool) 0%, var(--accent) 100%);
+  }
+  .stat-row .num { color: var(--text); text-align: right; }
+  .loadout-card .price {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+  }
+  .loadout-card .price b { color: var(--accent); }
+
+  /* 新手入门 */
+  .start-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+  }
+  .start-step {
+    padding: 28px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 20px;
+  }
+  .start-step:nth-child(2n) { border-right: none; }
+  .start-step:nth-last-child(-n+2) { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 56px;
+  }
+  .step-body h5 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .step-body p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  /* 新闻/版本 */
+  .news-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .news-row {
+    display: grid;
+    grid-template-columns: 100px 100px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .news-row:hover { background: rgba(245, 166, 35, 0.04); padding-left: 12px; padding-right: 12px; }
+  .news-row .date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+  .news-row .cat {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .news-row .title-text {
+    font-size: 15px;
+    color: var(--text);
+  }
+  .news-row .arrow {
+    font-family: var(--font-mono);
+    color: var(--text-faint);
+  }
+  .news-row:hover .arrow { color: var(--accent); }
+
+  /* Footer */
+  footer {
+    padding: 40px 48px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer a { color: var(--text-dim); text-decoration: none; margin-right: 16px; }
+  footer a:hover { color: var(--accent); }
+
+  /* 入场动画 */
+  .reveal { opacity: 0; transform: translateY(20px); animation: reveal 0.7s ease forwards; }
+  @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  /* 响应式 */
+  @media (max-width: 900px) {
+    header { grid-template-columns: 1fr; gap: 20px; padding: 24px; }
+    nav.primary { justify-self: start; flex-wrap: wrap; gap: 16px; }
+    .hero { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
+    section { padding: 48px 24px; }
+    .modes { grid-template-columns: 1fr; }
+    .mode-card { border-right: none; border-bottom: 1px solid var(--line); }
+    .mode-card:last-child { border-bottom: none; }
+    .start-grid { grid-template-columns: 1fr; }
+    .start-step { border-right: none !important; }
+    .start-step:nth-last-child(2) { border-bottom: 1px solid var(--line); }
+    .news-row { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+    .news-row .date, .news-row .cat { font-size: 10px; }
+    footer { padding: 32px 24px; flex-direction: column; }
+    .status-bar { padding: 8px 16px; font-size: 10px; gap: 12px; }
+    .status-bar .left, .status-bar .right { gap: 12px; }
+    .status-bar .right span:nth-child(2) { display: none; }
+  }
+
+  /* 语言切换 */
+  .lang-toggle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 10px;
+    border: 1px solid var(--line-bright);
+    cursor: pointer;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .lang-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(245, 166, 35, 0.06);
+  }
+  .lang-toggle.en { color: var(--accent); border-color: var(--accent); }
+
+  /* ====== 可展开提示徽标 ====== */
+  .card-cta {
+    position: absolute;
+    top: 0; right: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 4px 10px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all 0.2s;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .map-card:hover .card-cta,
+  .loadout-card:hover .card-cta,
+  .mode-card:hover .card-cta { opacity: 1; transform: translateY(0); }
+  .loadout-card, .mode-card { position: relative; }
+
+  /* ====== 详情模态层 ====== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 6, 3, 0.82);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    padding: 40px 24px;
+    overflow-y: auto;
+  }
+  .modal-backdrop.open { display: block; opacity: 1; }
+  .modal-backdrop::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245, 166, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245, 166, 35, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .modal {
+    max-width: 920px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg) 100%);
+    border: 1px solid var(--line-bright);
+    position: relative;
+    transform: translateY(16px) scale(0.99);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 28px; height: 28px;
+    border-top: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+  }
+  .modal::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 28px; height: 28px;
+    border-bottom: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  .modal-head {
+    padding: 28px 32px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    position: relative;
+  }
+  .modal-head .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .modal-head h3 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+  .modal-head .tagline {
+    margin-top: 12px;
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .modal-head .meta { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  .modal-close {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border: 1px solid var(--line-bright);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: grid;
+    place-items: center;
+  }
+  .modal-close:hover { border-color: var(--hot); color: var(--hot); background: rgba(227,75,58,0.08); }
+
+  .modal-body { padding: 8px 32px 36px; }
+
+  /* 详情区块 */
+  .detail-block { margin-top: 32px; }
+  .detail-block > .blk-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .detail-block > .blk-title::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* 区域卡（关键搜刮区） */
+  .zone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .zone-item {
+    border: 1px solid var(--line);
+    background: var(--bg-card-2);
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .zone-item:hover { border-color: var(--line-bright); }
+  .zone-item .zh-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; gap: 10px; }
+  .zone-item h6 { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+  .risk-pill { font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid; flex-shrink: 0; }
+  .risk-pill.low { color: var(--safe); border-color: var(--safe); }
+  .risk-pill.mid { color: var(--accent); border-color: var(--accent-dim); }
+  .risk-pill.high { color: var(--hot); border-color: rgba(227,75,58,0.5); }
+  .zone-item .loot { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .zone-item p { font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+
+  /* 列表型（撤离点 / 头目） */
+  .info-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); }
+  .info-list .li {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 18px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .info-list .li:last-child { border-bottom: none; }
+  .info-list .li:hover { background: rgba(245,166,35,0.03); }
+  .info-list .li .lead { font-family: var(--font-mono); font-size: 13px; color: var(--text); letter-spacing: 0.05em; }
+  .info-list .li .lead .sub { display: block; color: var(--text-faint); font-size: 11px; margin-top: 4px; }
+  .info-list .li .body { font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+  .info-list .li .body .hl { color: var(--accent); }
+
+  /* 推荐路线（步骤） */
+  .route-steps { counter-reset: rstep; display: flex; flex-direction: column; gap: 0; }
+  .route-steps .rstep {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: flex-start;
+  }
+  .route-steps .rstep:last-child { border-bottom: none; }
+  .route-steps .rstep::before {
+    counter-increment: rstep;
+    content: counter(rstep, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 4px 8px;
+    flex-shrink: 0;
+    height: fit-content;
+  }
+  .route-steps .rstep span { font-size: 14px; color: var(--text-dim); line-height: 1.6; padding-top: 3px; }
+
+  /* 干货提示 / 优劣 */
+  .tip-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tip-list li { display: flex; gap: 12px; font-size: 14px; color: var(--text-dim); line-height: 1.55; }
+  .tip-list li::before { content: '▸'; color: var(--accent); flex-shrink: 0; font-family: var(--font-mono); }
+  .proscons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pc-col { border: 1px solid var(--line); padding: 16px 18px; }
+  .pc-col.pros { border-left: 2px solid var(--safe); }
+  .pc-col.cons { border-left: 2px solid var(--hot); }
+  .pc-col .pc-h { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 12px; }
+  .pc-col.pros .pc-h { color: var(--safe); }
+  .pc-col.cons .pc-h { color: var(--hot); }
+  .pc-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .pc-col li { font-size: 13px; color: var(--text-dim); line-height: 1.5; display: flex; gap: 8px; }
+  .pc-col.pros li::before { content: '+'; color: var(--safe); font-family: var(--font-mono); }
+  .pc-col.cons li::before { content: '−'; color: var(--hot); font-family: var(--font-mono); }
+
+  /* 武器统计大图 */
+  .modal .stats-big { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; }
+  .stat-big {
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    background: var(--bg-card-2);
+  }
+  .stat-big .sb-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .stat-big .sb-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
+  .stat-big .sb-num { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-big .sb-bar { height: 5px; background: var(--line); overflow: hidden; }
+  .stat-big .sb-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--cool), var(--accent)); }
+
+  /* 改装清单 */
+  .build-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; }
+  .build-item { border: 1px solid var(--line); padding: 12px 14px; background: var(--bg-card-2); }
+  .build-item .slot { font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 5px; }
+  .build-item .part { font-size: 14px; color: var(--text); font-weight: 500; margin-bottom: 5px; }
+  .build-item .bnote { font-size: 12px; color: var(--text-dim); line-height: 1.45; }
+
+  /* chips（适用地图 / 弹药） */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--line-bright);
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+  .chip b { color: var(--accent); font-weight: 500; }
+
+  /* 长文（情报） */
+  .article-body p { font-size: 14px; color: var(--text-dim); line-height: 1.75; margin-bottom: 14px; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .article-body .pullquote {
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 18px;
+    margin: 18px 0;
+    color: var(--text);
+    font-size: 15px;
+    font-style: italic;
+  }
+
+  body.modal-open { overflow: hidden; }
+
+  @media (max-width: 720px) {
+    .modal-body { padding: 8px 18px 28px; }
+    .modal-head { padding: 22px 18px 18px; }
+    .info-list .li { grid-template-columns: 1fr; gap: 6px; }
+    .proscons { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 状态栏 -->
+<div class="status-bar">
+  <div class="left">
+    <span><span class="status-dot"></span>G.T.I. // ONLINE</span>
+    <span class="hidden-mobile" id="utc-time">UTC 00:00:00</span>
+    <span>SECTOR // ASARA</span>
+  </div>
+  <div class="right">
+    <span>VER 2.6.1</span>
+    <span>SIG ▲▲▲△</span>
+    <span style="color:var(--accent)">[ INTL SERVER ]</span>
+    <span id="lang-toggle" class="lang-toggle">EN</span>
+  </div>
+</div>
+
+<!-- 头部 -->
+<header>
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-text">
+      <h1 data-i18n="siteTitle">DELTA OPS // 作战简报</h1>
+      <div class="sub" data-i18n="siteSub">三角洲行动 · 国际服攻略站</div>
+    </div>
+  </div>
+  <nav class="primary">
+    <a href="#maps" class="active" data-i18n="navMaps">地图</a>
+    <a href="#modes" data-i18n="navModes">玩法</a>
+    <a href="#loadouts" data-i18n="navLoadouts">配装</a>
+    <a href="#start" data-i18n="navStart">入门</a>
+    <a href="#news" data-i18n="navNews">情报</a>
+  </nav>
+  <div></div>
+  <div class="search-pill">
+    <span style="color:var(--accent);margin-right:10px;font-family:var(--font-mono);">⌕</span>
+    <input type="text" placeholder="搜索地图 / 武器 / 物资 / 干员..." data-i18n="searchPlaceholder" />
+    <span class="key-hint">⌘ K</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="border-bottom:1px solid var(--line);padding-bottom:64px;">
+  <div class="reveal">
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">MISSION BRIEF · 2035 · 北非阿萨拉</div>
+    <h2 data-i18n-html="hero">
+      在<span class="strike">死亡</span><span class="highlight">撤离</span><br>
+      之前 读完简报
+    </h2>
+    <p class="lede" data-i18n="heroLede">
+      撤离类射击游戏，赢家是带着东西走出去的那个。这里有四张烽火地带地图的撤离点、Boss 刷新、高价值搜刮区，热门武器的零氪与天花板配装，以及国际服开荒第一周该做的事。
+    </p>
+    <div class="hero-actions">
+      <a href="#maps" class="btn"><span data-i18n="heroBtn">查看地图</span> <span class="btn-arrow">→</span></a>
+      <a href="#start" class="btn ghost" data-i18n="heroBtn2">新手开荒</a>
+    </div>
+  </div>
+
+  <!-- HUD 实时面板 -->
+  <div class="hud-panel reveal delay-2">
+    <div class="hud-title">
+      <span data-i18n="hudTitle">// TRADING DESK · LIVE</span>
+      <span class="blink">● REC</span>
+    </div>
+    <div class="hud-row">
+      <span class="key" data-i18n="hudRow1k">曼德尔砖 (Mandel)</span>
+      <span class="val up">▲ 1,840,000</span>
+    </div>
+    <div class="hud-row">
+      <span class="key" data-i18n="hudRow2k">协议箱 · 红</span>
+      <span class="val up">▲ 620,000</span>
+    </div>
+    <div class="hud-row">
+      <span class="key" data-i18n="hudRow3k">M4A1 改装基础件</span>
+      <span class="val">— 48,500</span>
+    </div>
+    <div class="hud-row">
+      <span class="key" data-i18n="hudRow4k">浅蓝钥匙 · 行政楼</span>
+      <span class="val down">▼ 92,000</span>
+    </div>
+    <div class="hud-row">
+      <span class="key" data-i18n="hudRow5k">五级胸甲 (随机)</span>
+      <span class="val up">▲ 380,000</span>
+    </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;">
+      <span data-i18n="hudFooter">数据每 6 分钟同步 · 仅供参考</span>
+    </div>
+  </div>
+</section>
+
+<!-- 四大地图 -->
+<section id="maps">
+  <div class="section-head">
+    <div>
+      <div class="index" data-i18n="secMapsIdx">// 01 — 烽火地带 / EXFIL ZONES</div>
+      <h3 data-i18n="secMapsTitle">四张撤离地图</h3>
+    </div>
+    <a href="#" class="see-all" data-i18n="secMapsAll">查看全部 →</a>
+  </div>
+
+  <div class="map-grid">
+    <!-- 零号大坝 -->
+    <div class="map-card reveal" data-detail="map-dam">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="map-art">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-dam" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a3023" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="400" height="200" fill="#1a1f15"/>
+          <rect width="400" height="200" fill="url(#grid-dam)"/>
+          <!-- 水域 -->
+          <path d="M 0 100 Q 100 90 200 110 T 400 100 L 400 200 L 0 200 Z" fill="#0d2030" opacity="0.6"/>
+          <!-- 大坝 -->
+          <rect x="150" y="80" width="100" height="40" fill="#3d4632" stroke="#f5a623" stroke-width="1"/>
+          <!-- 建筑簇 -->
+          <rect x="40" y="40" width="14" height="18" fill="#3d4632"/>
+          <rect x="60" y="38" width="12" height="20" fill="#3d4632"/>
+          <rect x="78" y="42" width="16" height="16" fill="#3d4632"/>
+          <rect x="320" y="50" width="18" height="22" fill="#3d4632"/>
+          <rect x="344" y="48" width="14" height="24" fill="#3d4632"/>
+          <!-- 撤离点 -->
+          <circle cx="60" cy="50" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <circle cx="60" cy="50" r="8" fill="none" stroke="#f5a623" stroke-width="0.5" opacity="0.5"/>
+          <text x="72" y="54" font-family="JetBrains Mono" font-size="9" fill="#f5a623">EX-01</text>
+          <circle cx="340" cy="60" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <text x="306" y="56" font-family="JetBrains Mono" font-size="9" fill="#f5a623">EX-02</text>
+          <!-- Boss 点 -->
+          <path d="M 200 100 L 196 108 L 204 108 Z" fill="#e34b3a"/>
+        </svg>
+      </div>
+      <div class="map-info">
+        <div class="name-row">
+          <h4 data-i18n="map1Name">零号大坝</h4>
+          <span class="code">MAP-01</span>
+        </div>
+        <div class="meta">
+          <span class="tag cool" data-i18n="map1Tag1">入门</span>
+          <span class="tag" data-i18n="map1Tag2">常规/机密</span>
+        </div>
+        <p class="desc" data-i18n="map1Desc">东西高南部低，核心是行政楼与水泥厂的高资搜刮，双拉闸撤离机制。</p>
+        <div class="difficulty">
+          <span data-i18n="map1Diff">难度</span>
+          <span class="diff-bar">
+            <span class="on"></span><span class="on"></span><span></span><span></span><span></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 长弓溪谷 -->
+    <div class="map-card reveal delay-1" data-detail="map-canyon">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="map-art">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-canyon" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a3023" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="400" height="200" fill="#1a1f15"/>
+          <rect width="400" height="200" fill="url(#grid-canyon)"/>
+          <!-- 等高线 -->
+          <path d="M 0 60 Q 100 20 200 50 T 400 70" fill="none" stroke="#3d4632" stroke-width="1"/>
+          <path d="M 0 90 Q 100 50 200 80 T 400 100" fill="none" stroke="#3d4632" stroke-width="1"/>
+          <path d="M 0 130 Q 100 90 200 120 T 400 140" fill="none" stroke="#3d4632" stroke-width="1"/>
+          <!-- 道路 -->
+          <path d="M 0 160 Q 150 100 280 130 T 400 110" fill="none" stroke="#f5a62355" stroke-width="2" stroke-dasharray="4 4"/>
+          <!-- 酒店建筑 -->
+          <rect x="180" y="80" width="40" height="30" fill="#3d4632" stroke="#f5a623" stroke-width="1"/>
+          <rect x="186" y="86" width="4" height="4" fill="#f5a623"/>
+          <rect x="194" y="86" width="4" height="4" fill="#f5a623"/>
+          <rect x="202" y="86" width="4" height="4" fill="#f5a623"/>
+          <!-- 雷达站 -->
+          <circle cx="320" cy="40" r="6" fill="none" stroke="#f5a623" stroke-width="1"/>
+          <circle cx="320" cy="40" r="2" fill="#f5a623"/>
+          <line x1="320" y1="34" x2="320" y2="46" stroke="#f5a623" stroke-width="0.8"/>
+          <line x1="314" y1="40" x2="326" y2="40" stroke="#f5a623" stroke-width="0.8"/>
+          <!-- 撤离点 -->
+          <circle cx="40" cy="170" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <text x="50" y="173" font-family="JetBrains Mono" font-size="9" fill="#f5a623">EX-01</text>
+          <circle cx="360" cy="180" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="map-info">
+        <div class="name-row">
+          <h4 data-i18n="map2Name">长弓溪谷</h4>
+          <span class="code">MAP-02</span>
+        </div>
+        <div class="meta">
+          <span class="tag cool" data-i18n="map2Tag1">入门</span>
+          <span class="tag" data-i18n="map2Tag2">常规/机密</span>
+        </div>
+        <p class="desc" data-i18n="map2Desc">钻石皇后酒店与雷达站双高资点，中远距交火地形，狙击友好。</p>
+        <div class="difficulty">
+          <span data-i18n="map2Diff">难度</span>
+          <span class="diff-bar">
+            <span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 巴克什 -->
+    <div class="map-card reveal delay-2" data-detail="map-bakshi">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="map-art">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-bak" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a3023" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="400" height="200" fill="#1a1f15"/>
+          <rect width="400" height="200" fill="url(#grid-bak)"/>
+          <!-- 城市街区 -->
+          <g fill="#3d4632">
+            <rect x="30" y="30" width="20" height="30"/>
+            <rect x="55" y="35" width="18" height="28"/>
+            <rect x="80" y="32" width="22" height="32"/>
+            <rect x="30" y="70" width="25" height="22"/>
+            <rect x="60" y="72" width="20" height="22"/>
+          </g>
+          <!-- 博物馆区域 -->
+          <rect x="170" y="60" width="60" height="50" fill="#3d4632" stroke="#f5a623" stroke-width="1.5"/>
+          <polygon points="170,60 200,40 230,60" fill="#3d4632" stroke="#f5a623" stroke-width="1.5"/>
+          <line x1="180" y1="78" x2="220" y2="78" stroke="#f5a623" stroke-width="0.5"/>
+          <line x1="180" y1="90" x2="220" y2="90" stroke="#f5a623" stroke-width="0.5"/>
+          <!-- 巴别塔 -->
+          <polygon points="290,140 310,140 314,80 286,80" fill="#3d4632" stroke="#e34b3a" stroke-width="1"/>
+          <polygon points="294,80 306,80 308,50 292,50" fill="#3d4632" stroke="#e34b3a" stroke-width="1"/>
+          <!-- 街道 -->
+          <path d="M 0 110 L 400 130" stroke="#f5a62333" stroke-width="3"/>
+          <path d="M 140 0 L 150 200" stroke="#f5a62333" stroke-width="3"/>
+          <!-- 撤离点 -->
+          <circle cx="20" cy="180" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <circle cx="380" cy="20" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <!-- Boss -->
+          <path d="M 300 95 L 296 103 L 304 103 Z" fill="#e34b3a"/>
+        </svg>
+      </div>
+      <div class="map-info">
+        <div class="name-row">
+          <h4 data-i18n="map3Name">巴克什</h4>
+          <span class="code">MAP-03</span>
+        </div>
+        <div class="meta">
+          <span class="tag" data-i18n="map3Tag1">进阶</span>
+          <span class="tag hot" data-i18n="map3Tag2">机密/绝密</span>
+        </div>
+        <p class="desc" data-i18n="map3Desc">城市巷战，皇家博物馆顶级资源区，巴别塔近距对抗高烈度。</p>
+        <div class="difficulty">
+          <span data-i18n="map3Diff">难度</span>
+          <span class="diff-bar">
+            <span class="on"></span><span class="on"></span><span class="on"></span><span class="on hot"></span><span></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 航天基地 -->
+    <div class="map-card reveal delay-3" data-detail="map-spaceport">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="map-art">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-space" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a3023" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="400" height="200" fill="#1a1f15"/>
+          <rect width="400" height="200" fill="url(#grid-space)"/>
+          <!-- 跑道 -->
+          <rect x="40" y="120" width="320" height="14" fill="#2a3023" stroke="#f5a62366" stroke-width="0.5"/>
+          <g stroke="#f5a623" stroke-width="0.5" stroke-dasharray="8 8">
+            <line x1="40" y1="127" x2="360" y2="127"/>
+          </g>
+          <!-- 发射塔 -->
+          <polygon points="200,90 196,40 204,40 200,90" fill="#3d4632" stroke="#e34b3a" stroke-width="1.5"/>
+          <line x1="192" y1="60" x2="208" y2="60" stroke="#e34b3a" stroke-width="1"/>
+          <line x1="190" y1="75" x2="210" y2="75" stroke="#e34b3a" stroke-width="1"/>
+          <!-- 总裁室建筑 -->
+          <rect x="290" y="60" width="50" height="40" fill="#3d4632" stroke="#f5a623" stroke-width="1.5"/>
+          <text x="298" y="84" font-family="JetBrains Mono" font-size="8" fill="#f5a623">CEO</text>
+          <!-- 控制中心 -->
+          <rect x="60" y="70" width="40" height="30" fill="#3d4632" stroke="#4a8c6f" stroke-width="1"/>
+          <!-- 圆形雷达 -->
+          <circle cx="140" cy="50" r="14" fill="none" stroke="#3d4632" stroke-width="1"/>
+          <circle cx="140" cy="50" r="8" fill="none" stroke="#3d4632" stroke-width="1"/>
+          <circle cx="140" cy="50" r="2" fill="#f5a623"/>
+          <!-- 撤离点 -->
+          <circle cx="30" cy="40" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+          <circle cx="370" cy="170" r="4" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="map-info">
+        <div class="name-row">
+          <h4 data-i18n="map4Name">航天基地</h4>
+          <span class="code">MAP-04</span>
+        </div>
+        <div class="meta">
+          <span class="tag hot" data-i18n="map4Tag1">顶级</span>
+          <span class="tag hot" data-i18n="map4Tag2">机密/绝密</span>
+        </div>
+        <p class="desc" data-i18n="map4Desc">总裁室天花板搜刮，开阔跑道是死亡走廊，需要小队配合与好枪法。</p>
+        <div class="difficulty">
+          <span data-i18n="map4Diff">难度</span>
+          <span class="diff-bar">
+            <span class="on"></span><span class="on"></span><span class="on"></span><span class="on hot"></span><span class="on hot"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 三大模式 -->
+<section id="modes">
+  <div class="section-head">
+    <div>
+      <div class="index" data-i18n="secModesIdx">// 02 — GAME MODES</div>
+      <h3 data-i18n="secModesTitle">三种玩法</h3>
+    </div>
+  </div>
+
+  <div class="modes">
+    <div class="mode-card reveal" data-detail="mode-hazard">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="mode-num">M_01</div>
+      <h4 data-i18n="mode1Name">烽火地带</h4>
+      <div class="en" data-i18n="mode1En">EXFILTRATION · OPERATIONS</div>
+      <p data-i18n="mode1Desc">撤离类塔科夫玩法，带装备进图、搜物资、活着出来。亏装备是常态，搞清物价是入门门槛。</p>
+    </div>
+    <div class="mode-card reveal delay-1" data-detail="mode-warfare">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="mode-num">M_02</div>
+      <h4 data-i18n="mode2Name">全面战场</h4>
+      <div class="en" data-i18n="mode2En">WARFARE · 48 VS 48</div>
+      <p data-i18n="mode2Desc">大地图海陆空团战，黑鹰直升机、坦克、装甲车随便开。轻竞技不亏物资，赚币练手都合适。</p>
+    </div>
+    <div class="mode-card reveal delay-2" data-detail="mode-bhd">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="mode-num">M_03</div>
+      <h4 data-i18n="mode3Name">黑鹰坠落</h4>
+      <div class="en" data-i18n="mode3En">BLACK HAWK DOWN · CAMPAIGN</div>
+      <p data-i18n="mode3Desc">以 2001 年电影为蓝本的剧情战役，重制版叙事体验，可单人也可小队推进。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 武器配装 -->
+<section id="loadouts">
+  <div class="section-head">
+    <div>
+      <div class="index" data-i18n="secLoadIdx">// 03 — LOADOUTS</div>
+      <h3 data-i18n="secLoadTitle">当前版本 META 配装</h3>
+    </div>
+    <a href="#" class="see-all" data-i18n="secLoadAll">完整武器库 →</a>
+  </div>
+
+  <div class="loadout-grid">
+    <div class="loadout-card reveal" data-detail="wpn-m4a1">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="top">
+        <h5 data-i18n="load1Name">M4A1 · 中距通用</h5>
+        <span class="tier">S</span>
+      </div>
+      <div class="stats">
+        <div class="stat-row"><span class="label" data-i18n="statDmg">伤害</span><div class="stat-bar"><span style="width:72%"></span></div><span class="num">72</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statCtrl">操控</span><div class="stat-bar"><span style="width:84%"></span></div><span class="num">84</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRng">射程</span><div class="stat-bar"><span style="width:68%"></span></div><span class="num">68</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRate">射速</span><div class="stat-bar"><span style="width:78%"></span></div><span class="num">78</span></div>
+      </div>
+      <div class="price"><span data-i18n="load1PriceLabel">性价比</span><b data-i18n="load1Price">¤ 48,500</b></div>
+    </div>
+
+    <div class="loadout-card reveal delay-1" data-detail="wpn-akm">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="top">
+        <h5 data-i18n="load2Name">AKM · 高伤近战</h5>
+        <span class="tier">S</span>
+      </div>
+      <div class="stats">
+        <div class="stat-row"><span class="label" data-i18n="statDmg">伤害</span><div class="stat-bar"><span style="width:92%"></span></div><span class="num">92</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statCtrl">操控</span><div class="stat-bar"><span style="width:54%"></span></div><span class="num">54</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRng">射程</span><div class="stat-bar"><span style="width:60%"></span></div><span class="num">60</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRate">射速</span><div class="stat-bar"><span style="width:62%"></span></div><span class="num">62</span></div>
+      </div>
+      <div class="price"><span data-i18n="load2PriceLabel">跑刀首选</span><b data-i18n="load2Price">¤ 22,000</b></div>
+    </div>
+
+    <div class="loadout-card reveal delay-2" data-detail="wpn-scar">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="top">
+        <h5 data-i18n="load3Name">SCAR-H · 远程压制</h5>
+        <span class="tier">A</span>
+      </div>
+      <div class="stats">
+        <div class="stat-row"><span class="label" data-i18n="statDmg">伤害</span><div class="stat-bar"><span style="width:86%"></span></div><span class="num">86</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statCtrl">操控</span><div class="stat-bar"><span style="width:62%"></span></div><span class="num">62</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRng">射程</span><div class="stat-bar"><span style="width:88%"></span></div><span class="num">88</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRate">射速</span><div class="stat-bar"><span style="width:58%"></span></div><span class="num">58</span></div>
+      </div>
+      <div class="price"><span data-i18n="load3PriceLabel">机密以上</span><b data-i18n="load3Price">¤ 96,000</b></div>
+    </div>
+
+    <div class="loadout-card reveal delay-3" data-detail="wpn-mp5">
+      <span class="card-cta" data-i18n="ctaDetail">作战详情 ▸</span>
+      <div class="top">
+        <h5 data-i18n="load4Name">MP5 · 室内突袭</h5>
+        <span class="tier">A</span>
+      </div>
+      <div class="stats">
+        <div class="stat-row"><span class="label" data-i18n="statDmg">伤害</span><div class="stat-bar"><span style="width:48%"></span></div><span class="num">48</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statCtrl">操控</span><div class="stat-bar"><span style="width:94%"></span></div><span class="num">94</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRng">射程</span><div class="stat-bar"><span style="width:34%"></span></div><span class="num">34</span></div>
+        <div class="stat-row"><span class="label" data-i18n="statRate">射速</span><div class="stat-bar"><span style="width:90%"></span></div><span class="num">90</span></div>
+      </div>
+      <div class="price"><span data-i18n="load4PriceLabel">巴克什室内</span><b data-i18n="load4Price">¤ 18,500</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 新手入门 -->
+<section id="start">
+  <div class="section-head">
+    <div>
+      <div class="index" data-i18n="secStartIdx">// 04 — ONBOARDING</div>
+      <h3 data-i18n="secStartTitle">国际服第一周</h3>
+    </div>
+  </div>
+
+  <div class="start-grid">
+    <div class="start-step reveal">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h5 data-i18n="step1Title">下载与加速器</h5>
+        <p data-i18n="step1Desc">国际服与国服账号不互通，需走海外客户端 / 主机 / 手游三端任一。延迟敏感，建议配合稳定加速器使用。</p>
+      </div>
+    </div>
+    <div class="start-step reveal delay-1">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h5 data-i18n="step2Title">先打全面战场</h5>
+        <p data-i18n="step2Desc">不要直接进烽火地带送装备。先在全面战场熟悉枪感、键位、载具，顺便攒哈弗币。</p>
+      </div>
+    </div>
+    <div class="start-step reveal delay-2">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h5 data-i18n="step3Title">跑刀积累哈弗币</h5>
+        <p data-i18n="step3Desc">穿廉价装进入常规零号大坝跑刀。学会识别协议箱、保险柜、电脑这些高价值交互点，撤离比击杀更重要。</p>
+      </div>
+    </div>
+    <div class="start-step reveal delay-3">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <h5 data-i18n="step4Title">学会看物价</h5>
+        <p data-i18n="step4Desc">同一个东西在不同物资点的价值差距巨大。先记住 T0「大红」清单和当前周交易行均价，再决定背什么走。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 版本/情报 -->
+<section id="news">
+  <div class="section-head">
+    <div>
+      <div class="index" data-i18n="secNewsIdx">// 05 — INTEL FEED</div>
+      <h3 data-i18n="secNewsTitle">最近更新</h3>
+    </div>
+    <a href="#" class="see-all" data-i18n="secNewsAll">历史档案 →</a>
+  </div>
+
+  <div class="news-list">
+    <div class="news-row" data-detail="news-1">
+      <div class="date">2026.05.20</div>
+      <div class="cat" data-i18n="newsCatPatch">PATCH</div>
+      <div class="title-text" data-i18n="news1">航天基地新增「前夜 / 长夜 / 终夜」时段事件，刷新机制调整</div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="news-row" data-detail="news-2">
+      <div class="date">2026.05.14</div>
+      <div class="cat" data-i18n="newsCatMeta">META</div>
+      <div class="title-text" data-i18n="news2">SCAR-H 弹道修正后跌出 S 级，M4A1 改装重回中距首选</div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="news-row" data-detail="news-3">
+      <div class="date">2026.05.08</div>
+      <div class="cat" data-i18n="newsCatMap">MAP</div>
+      <div class="title-text" data-i18n="news3">零号大坝地下通道全部被淹，玩法分析与新路线推荐</div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="news-row" data-detail="news-4">
+      <div class="date">2026.05.02</div>
+      <div class="cat" data-i18n="newsCatEvent">EVENT</div>
+      <div class="title-text" data-i18n="news4">巴克什博物馆周末双倍掉率活动，附最优跑图路线</div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="news-row" data-detail="news-5">
+      <div class="date">2026.04.27</div>
+      <div class="cat" data-i18n="newsCatGuide">GUIDE</div>
+      <div class="title-text" data-i18n="news5">曼德尔砖完整破译攻略：风险、收益、暴露机制全解析</div>
+      <div class="arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="#" data-i18n="footerAbout">关于</a>
+    <a href="#" data-i18n="footerSource">数据来源</a>
+    <a href="#" data-i18n="footerSubmit">投稿</a>
+    <a href="#">RSS</a>
+  </div>
+  <div data-i18n="footerNote">// 非官方爱好者站点 · DELTA OPS BRIEFING · 2026</div>
+</footer>
+
+<!-- 详情模态层 -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" id="modal-eyebrow"></div>
+        <h3 id="modal-title"></h3>
+        <p class="tagline" id="modal-tagline"></p>
+        <div class="meta" id="modal-meta"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  // ====== i18n 国际化 ======
+  const LANG = {
+    zh: {
+      siteTitle: 'DELTA OPS // 作战简报',
+      siteSub: '三角洲行动 · 国际服攻略站',
+      navMaps: '地图', navModes: '玩法', navLoadouts: '配装', navStart: '入门', navNews: '情报',
+      searchPlaceholder: '搜索地图 / 武器 / 物资 / 干员...',
+      ctaDetail: '作战详情 ▸', modalClose: '关闭 (ESC)',
+      heroEyebrow: 'MISSION BRIEF · 2035 · 北非阿萨拉',
+      heroT1: '在', heroStrike: '死亡', heroHighlight: '撤离', heroT2: '之前 读完简报',
+      heroLede: '撤离类射击游戏，赢家是带着东西走出去的那个。这里有四张烽火地带地图的撤离点、Boss 刷新、高价值搜刮区，热门武器的零氪与天花板配装，以及国际服开荒第一周该做的事。',
+      heroBtn: '查看地图', heroBtn2: '新手开荒',
+      hudTitle: '// TRADING DESK · LIVE',
+      hudRow1k: '曼德尔砖 (Mandel)', hudRow2k: '协议箱 · 红', hudRow3k: 'M4A1 改装基础件', hudRow4k: '浅蓝钥匙 · 行政楼', hudRow5k: '五级胸甲 (随机)',
+      hudFooter: '数据每 6 分钟同步 · 仅供参考',
+      secMapsIdx: '// 01 — 烽火地带 / EXFIL ZONES',
+      secMapsTitle: '四张撤离地图',
+      secMapsAll: '查看全部 →',
+      map1Name: '零号大坝', map1Tag1: '入门', map1Tag2: '常规/机密', map1Desc: '东西高南部低，核心是行政楼与水泥厂的高资搜刮，双拉闸撤离机制。', map1Diff: '难度',
+      map2Name: '长弓溪谷', map2Tag1: '入门', map2Tag2: '常规/机密', map2Desc: '钻石皇后酒店与雷达站双高资点，中远距交火地形，狙击友好。', map2Diff: '难度',
+      map3Name: '巴克什', map3Tag1: '进阶', map3Tag2: '机密/绝密', map3Desc: '城市巷战，皇家博物馆顶级资源区，巴别塔近距对抗高烈度。', map3Diff: '难度',
+      map4Name: '航天基地', map4Tag1: '顶级', map4Tag2: '机密/绝密', map4Desc: '总裁室天花板搜刮，开阔跑道是死亡走廊，需要小队配合与好枪法。', map4Diff: '难度',
+      secModesIdx: '// 02 — GAME MODES',
+      secModesTitle: '三种玩法',
+      mode1Name: '烽火地带', mode1En: 'EXFILTRATION · OPERATIONS', mode1Desc: '撤离类塔科夫玩法，带装备进图、搜物资、活着出来。亏装备是常态，搞清物价是入门门槛。',
+      mode2Name: '全面战场', mode2En: 'WARFARE · 48 VS 48', mode2Desc: '大地图海陆空团战，黑鹰直升机、坦克、装甲车随便开。轻竞技不亏物资，赚币练手都合适。',
+      mode3Name: '黑鹰坠落', mode3En: 'BLACK HAWK DOWN · CAMPAIGN', mode3Desc: '以 2001 年电影为蓝本的剧情战役，重制版叙事体验，可单人也可小队推进。',
+      secLoadIdx: '// 03 — LOADOUTS',
+      secLoadTitle: '当前版本 META 配装',
+      secLoadAll: '完整武器库 →',
+      load1Name: 'M4A1 · 中距通用', load1PriceLabel: '性价比', load1Price: '¤ 48,500',
+      load2Name: 'AKM · 高伤近战', load2PriceLabel: '跑刀首选', load2Price: '¤ 22,000',
+      load3Name: 'SCAR-H · 远程压制', load3PriceLabel: '机密以上', load3Price: '¤ 96,000',
+      load4Name: 'MP5 · 室内突袭', load4PriceLabel: '巴克什室内', load4Price: '¤ 18,500',
+      statDmg: '伤害', statCtrl: '操控', statRng: '射程', statRate: '射速',
+      secStartIdx: '// 04 — ONBOARDING',
+      secStartTitle: '国际服第一周',
+      step1Title: '下载与加速器', step1Desc: '国际服与国服账号不互通，需走海外客户端 / 主机 / 手游三端任一。延迟敏感，建议配合稳定加速器使用。',
+      step2Title: '先打全面战场', step2Desc: '不要直接进烽火地带送装备。先在全面战场熟悉枪感、键位、载具，顺便攒哈弗币。',
+      step3Title: '跑刀积累哈弗币', step3Desc: '穿廉价装进入常规零号大坝跑刀。学会识别协议箱、保险柜、电脑这些高价值交互点，撤离比击杀更重要。',
+      step4Title: '学会看物价', step4Desc: '同一个东西在不同物资点的价值差距巨大。先记住 T0「大红」清单和当前周交易行均价，再决定背什么走。',
+      secNewsIdx: '// 05 — INTEL FEED',
+      secNewsTitle: '最近更新',
+      secNewsAll: '历史档案 →',
+      news1: '航天基地新增「前夜 / 长夜 / 终夜」时段事件，刷新机制调整',
+      news2: 'SCAR-H 弹道修正后跌出 S 级，M4A1 改装重回中距首选',
+      news3: '零号大坝地下通道全部被淹，玩法分析与新路线推荐',
+      news4: '巴克什博物馆周末双倍掉率活动，附最优跑图路线',
+      news5: '曼德尔砖完整破译攻略：风险、收益、暴露机制全解析',
+      newsCatPatch: 'PATCH', newsCatMeta: 'META', newsCatMap: 'MAP', newsCatEvent: 'EVENT', newsCatGuide: 'GUIDE',
+      footerAbout: '关于', footerSource: '数据来源', footerSubmit: '投稿',
+      footerNote: '// 非官方爱好者站点 · DELTA OPS BRIEFING · 2026',
+    },
+    en: {
+      siteTitle: 'DELTA OPS // BRIEFING',
+      siteSub: 'Delta Force · International Server Guide',
+      navMaps: 'Maps', navModes: 'Modes', navLoadouts: 'Loadouts', navStart: 'Guide', navNews: 'Intel',
+      searchPlaceholder: 'Search maps / weapons / loot / operators...',
+      ctaDetail: 'Briefing ▸', modalClose: 'Close (ESC)',
+      heroEyebrow: 'MISSION BRIEF · 2035 · ASARA',
+      heroT1: 'Read the brief ', heroStrike: 'before', heroHighlight: 'extraction', heroT2: '',
+      heroLede: 'A survival extraction shooter — the winner is the one who walks out with the goods. Here you\'ll find extraction points, boss spawns, high-value loot zones for all four Hazard Operation maps, budget and meta loadouts for popular weapons, and what to do in your first week on the international server.',
+      heroBtn: 'View Maps', heroBtn2: 'Starter Guide',
+      hudTitle: '// TRADING DESK · LIVE',
+      hudRow1k: 'Mandel Brick', hudRow2k: 'Supply Crate · Red', hudRow3k: 'M4A1 Base Mod', hudRow4k: 'Light Blue Key · Admin', hudRow5k: 'Lv.5 Vest (Random)',
+      hudFooter: 'Data syncs every 6 min · For reference only',
+      secMapsIdx: '// 01 — HAZARD OP / EXFIL ZONES',
+      secMapsTitle: 'Four Extraction Maps',
+      secMapsAll: 'View All →',
+      map1Name: 'Zero Dam', map1Tag1: 'Starter', map1Tag2: 'Normal/Secret', map1Desc: 'East high, south low. Key areas: Admin Building & Cement Plant. Double-pull extraction mechanic.', map1Diff: 'Difficulty',
+      map2Name: 'Longbow Canyon', map2Tag1: 'Starter', map2Tag2: 'Normal/Secret', map2Desc: 'Diamond Queen Hotel & Radar Station are the hot zones. Long-range terrain — sniper-friendly.', map2Diff: 'Difficulty',
+      map3Name: 'Bakshi', map3Tag1: 'Advanced', map3Tag2: 'Secret/Top Secret', map3Desc: 'Urban CQB. Royal Museum is the prime loot zone. Babel Tower features intense close-quarters fights.', map3Diff: 'Difficulty',
+      map4Name: 'Spaceport', map4Tag1: 'Elite', map4Tag2: 'Secret/Top Secret', map4Desc: 'CEO office has top-tier loot. The runway is a kill zone — bring squad coordination and good aim.', map4Diff: 'Difficulty',
+      secModesIdx: '// 02 — GAME MODES',
+      secModesTitle: 'Three Game Modes',
+      mode1Name: 'Hazard Operations', mode1En: 'EXFILTRATION · OPERATIONS', mode1Desc: 'Tarkov-style extraction. Gear up, loot, and get out alive. Losing gear is normal — knowing prices is the real entry barrier.',
+      mode2Name: 'Warfare', mode2En: 'WARFARE · 48 VS 48', mode2Desc: 'Large-scale combined-arms battles with Black Hawk helos, tanks, and APCs. No gear loss — great for practice and earning coins.',
+      mode3Name: 'Black Hawk Down', mode3En: 'BLACK HAWK DOWN · CAMPAIGN', mode3Desc: 'A story campaign based on the 2001 film. Remastered narrative experience — play solo or with a squad.',
+      secLoadIdx: '// 03 — LOADOUTS',
+      secLoadTitle: 'Current Meta Loadouts',
+      secLoadAll: 'Full Armory →',
+      load1Name: 'M4A1 · Mid-Range All-Rounder', load1PriceLabel: 'Value', load1Price: '¤ 48,500',
+      load2Name: 'AKM · High-Damage CQB', load2PriceLabel: 'Budget Pick', load2Price: '¤ 22,000',
+      load3Name: 'SCAR-H · Long-Range Suppression', load3PriceLabel: 'Secret+', load3Price: '¤ 96,000',
+      load4Name: 'MP5 · Indoor Assault', load4PriceLabel: 'Bakshi CQB', load4Price: '¤ 18,500',
+      statDmg: 'DMG', statCtrl: 'CTRL', statRng: 'RNG', statRate: 'ROF',
+      secStartIdx: '// 04 — ONBOARDING',
+      secStartTitle: 'First Week on INTL Server',
+      step1Title: 'Download & VPN', step1Desc: 'INTL and CN accounts are separate. Use the global client / console / mobile version. Ping-sensitive — a stable gaming VPN is recommended.',
+      step2Title: 'Start with Warfare', step2Desc: 'Don\'t feed your gear to Hazard Ops right away. Learn weapon feel, keybinds, and vehicles in Warfare first, while stacking Haavk coins.',
+      step3Title: 'Knife-Run for Coins', step3Desc: 'Go into Zero Dam (Normal) with cheap gear. Learn to identify supply cases, safes, and computers — high-value interaction points. Extraction > kills.',
+      step4Title: 'Learn the Prices', step4Desc: 'The same item can have wildly different values at different buy stations. Memorize the T0 "Big Red" list and current weekly market averages before deciding what to carry out.',
+      secNewsIdx: '// 05 — INTEL FEED',
+      secNewsTitle: 'Recent Updates',
+      secNewsAll: 'Archive →',
+      news1: 'Spaceport adds "Vigil / Long Night / Dead Night" time-of-day events, spawn rate adjustments',
+      news2: 'SCAR-H falls out of S-tier after ballistic rework, M4A1 modding returns as mid-range top pick',
+      news3: 'Zero Dam underground passages fully flooded — route analysis and new path recommendations',
+      news4: 'Bakshi Museum weekend double-drop rate event with optimal route guide',
+      news5: 'Complete Mandel Brick decoding guide: risk, reward, and exposure mechanics',
+      newsCatPatch: 'PATCH', newsCatMeta: 'META', newsCatMap: 'MAP', newsCatEvent: 'EVENT', newsCatGuide: 'GUIDE',
+      footerAbout: 'About', footerSource: 'Sources', footerSubmit: 'Submit',
+      footerNote: '// Unofficial fan site · DELTA OPS BRIEFING · 2026',
+    }
+  };
+
+  // ====== 详情数据 ======
+  const DETAILS = {
+    'map-dam': {
+      zh: {
+        eyebrow: 'MAP-01 · 烽火地带', name: '零号大坝',
+        tagline: '撤离玩法的第一课——低烈度、好上手、跑刀回本最快的图。',
+        tags: [{label:'入门',cls:'cool'},{label:'常规/机密',cls:''}],
+        sections: [
+          { kind:'zones', title:'关键搜刮区 / KEY LOOT ZONES', items:[
+            {name:'行政楼', loot:'保险柜 · 电脑情报 · 协议箱', risk:'mid', note:'中央高资点，二楼办公室与顶层保险柜价值最高，但也是交火焦点。'},
+            {name:'水泥厂', loot:'工业物资 · 头目刷新', risk:'high', note:'头目「黑卫」常驻区，竖直空间多、地形复杂，单刷风险高，建议小队清理。'},
+            {name:'集装箱码头', loot:'弹药 · 药品 · 杂物', risk:'low', note:'低价值但安全，适合开局补满弹药与药品后再往中心推进。'},
+            {name:'沉船', loot:'随机军需箱', risk:'mid', note:'靠水的隐蔽搜刮点，军需箱概率高，撤离前可顺路收一波。'},
+          ]},
+          { kind:'list', title:'撤离点 / EXTRACTION', items:[
+            {lead:'EX-01 大坝顶', sub:'无条件 · 常驻', body:'地图西北，开局即可用，最稳妥的保命撤离，新手默认目标。'},
+            {lead:'EX-02 东岸缆车', sub:'需拉双闸', body:'收益高但需先激活<span class="hl">两处闸门</span>，路线长、暴露多，适合贪一波时用。'},
+            {lead:'EX-03 应急通道', sub:'随机开放', body:'刷新位置随机，开图后留意 HUD 提示，常作被堵后的备用逃生口。'},
+          ]},
+          { kind:'list', title:'头目情报 / BOSS INTEL', items:[
+            {lead:'「黑卫」', sub:'水泥厂', body:'护甲厚、近距凶猛。掉落<span class="hl">高级护甲与红色协议箱钥匙</span>。拉开距离打，别正面顶。'},
+          ]},
+          { kind:'route', title:'推荐路线 / SUGGESTED ROUTE', items:[
+            '集装箱码头落地，先补满弹药与药品，确认队友位置。',
+            '沿水域北上摸行政楼，避开开阔的大坝桥面。',
+            '清行政楼二楼办公室与顶层保险柜，拿电脑情报。',
+            '时间充裕且队伍齐整再考虑水泥厂头目，否则直接撤。',
+            '默认走 EX-01 大坝顶；身上够肥就别贪 EX-02。',
+          ]},
+          { kind:'tips', title:'干货提示 / FIELD TIPS', items:[
+            '大坝回声重，听脚步比看小地图更重要，注意辨别方向。',
+            '协议箱开箱有声音也耗时，开前先架枪看门。',
+            '前 20 局把撤离率练到 60% 以上，再谈搜刮收益。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'MAP-01 · HAZARD OP', name: 'Zero Dam',
+        tagline: "Your first extraction lesson — low intensity, easy to learn, the fastest map to recoup gear.",
+        tags: [{label:'Starter',cls:'cool'},{label:'Normal/Secret',cls:''}],
+        sections: [
+          { kind:'zones', title:'KEY LOOT ZONES', items:[
+            {name:'Admin Building', loot:'Safe · PC Intel · Supply Crate', risk:'mid', note:'Central hot zone. The 2F offices and rooftop safe hold the most value — and draw the most fire.'},
+            {name:'Cement Plant', loot:'Industrial · Boss Spawn', risk:'high', note:'Home of the "Blackguard" boss. Complex vertical terrain — risky solo, clear it as a squad.'},
+            {name:'Container Yard', loot:'Ammo · Meds · Misc', risk:'low', note:'Low value but safe. Top up ammo and meds here before pushing inward.'},
+            {name:'Shipwreck', loot:'Random Crate', risk:'mid', note:'A hidden waterside spot with good crate odds — worth a detour before extracting.'},
+          ]},
+          { kind:'list', title:'EXTRACTION', items:[
+            {lead:'EX-01 Dam Top', sub:'No condition · Always on', body:'Northwest, open from the start. The safest exit and the default for new players.'},
+            {lead:'EX-02 East Cable', sub:'Needs two switches', body:'High reward, but you must flip <span class="hl">two gates</span> first. Long, exposed route — only when greedy.'},
+            {lead:'EX-03 Emergency Tunnel', sub:'Random', body:'Random spawn — watch the HUD. Often the backup exit when you get cut off.'},
+          ]},
+          { kind:'list', title:'BOSS INTEL', items:[
+            {lead:'"Blackguard"', sub:'Cement Plant', body:'Heavily armored, lethal up close. Drops <span class="hl">high-tier armor and a red crate key</span>. Keep distance, never brawl head-on.'},
+          ]},
+          { kind:'route', title:'SUGGESTED ROUTE', items:[
+            'Land at the Container Yard, top up ammo/meds, confirm teammate positions.',
+            'Move north along the water to Admin, avoiding the open dam bridge.',
+            'Clear the 2F offices and rooftop safe; grab the PC intel.',
+            'Only go for the Cement Plant boss with time and a full squad — otherwise extract.',
+            'Default to EX-01 Dam Top; if your bag is heavy, do not gamble on EX-02.',
+          ]},
+          { kind:'tips', title:'FIELD TIPS', items:[
+            'Echo is heavy here — footsteps matter more than the minimap. Read direction carefully.',
+            'Opening crates makes noise and takes time; aim at the door before you loot.',
+            'Push your extraction rate above 60% in your first 20 runs before chasing loot value.',
+          ]},
+        ]
+      }
+    },
+
+    'map-canyon': {
+      zh: {
+        eyebrow: 'MAP-02 · 烽火地带', name: '长弓溪谷',
+        tagline: '中远距交火的狙击天堂，两个高资点决定整局节奏。',
+        tags: [{label:'入门',cls:'cool'},{label:'常规/机密',cls:''}],
+        sections: [
+          { kind:'zones', title:'关键搜刮区 / KEY LOOT ZONES', items:[
+            {name:'钻石皇后酒店', loot:'保险柜 · 珠宝 · 现金', risk:'high', note:'全图最肥点，多层建筑与天台，常年三方混战，进去前先听声辨人。'},
+            {name:'雷达站', loot:'电子元件 · 情报箱', risk:'mid', note:'高地视野极好，是狙击点也是被狙点，适合控场但别久留。'},
+            {name:'山谷农舍', loot:'食物 · 弹药 · 杂物', risk:'low', note:'过渡补给点，开局热身、攒满消耗品的安全选择。'},
+            {name:'缆车中站', loot:'随机军需', risk:'mid', note:'连接酒店与雷达站的枢纽，伏击与转点都常经过。'},
+          ]},
+          { kind:'list', title:'撤离点 / EXTRACTION', items:[
+            {lead:'EX-01 谷口公路', sub:'无条件', body:'南侧常驻撤离，路线短、视野开阔，注意被高地狙。'},
+            {lead:'EX-02 缆车终点', sub:'需供电', body:'需先在雷达站<span class="hl">恢复供电</span>才能启动，收益高但耗时。'},
+            {lead:'EX-03 直升机坪', sub:'限时', body:'限时开放，HUD 倒计时，错过即关，适合速通局。'},
+          ]},
+          { kind:'list', title:'头目情报 / BOSS INTEL', items:[
+            {lead:'「游隼」', sub:'雷达站', body:'远程压制型，掉落<span class="hl">高级瞄具与改装件</span>。逼近反而更好打，别和它对狙。'},
+          ]},
+          { kind:'route', title:'推荐路线 / SUGGESTED ROUTE', items:[
+            '农舍落地补给，确认风向与队伍分工（谁狙谁突）。',
+            '中距推进，借等高线与岩体做掩体，少走开阔谷底。',
+            '酒店高收益高风险，没把握就先吃雷达站电子件。',
+            '撤离前回血回弹，长撤离点路上最容易被收人头。',
+          ]},
+          { kind:'tips', title:'干货提示 / FIELD TIPS', items:[
+            '远距交火多，一把好瞄具往往比多一格甲更值。',
+            '酒店天台是常见架枪位，进楼前先抬头看。',
+            '风声大，脚步未必听得清，多用视野预判走位。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'MAP-02 · HAZARD OP', name: 'Longbow Canyon',
+        tagline: "A sniper's paradise of mid-to-long range fights; two hot zones set the pace of the match.",
+        tags: [{label:'Starter',cls:'cool'},{label:'Normal/Secret',cls:''}],
+        sections: [
+          { kind:'zones', title:'KEY LOOT ZONES', items:[
+            {name:'Diamond Queen Hotel', loot:'Safe · Jewelry · Cash', risk:'high', note:'The richest spot on the map. Multi-floor with a rooftop — a perpetual three-way brawl. Listen before you enter.'},
+            {name:'Radar Station', loot:'Electronics · Intel Crate', risk:'mid', note:'Commanding high ground — a sniping spot and a sniped spot. Hold it briefly, then move.'},
+            {name:'Valley Farmhouse', loot:'Food · Ammo · Misc', risk:'low', note:'A transition stop. Safe place to warm up and stock consumables.'},
+            {name:'Cable Mid-Station', loot:'Random Crate', risk:'mid', note:'The hub between hotel and radar — common for ambushes and rotations.'},
+          ]},
+          { kind:'list', title:'EXTRACTION', items:[
+            {lead:'EX-01 Canyon Road', sub:'No condition', body:'Always-on southern exit. Short route, open sightlines — mind the snipers above.'},
+            {lead:'EX-02 Cable End', sub:'Needs power', body:'Must <span class="hl">restore power</span> at the Radar Station first. High reward, time-consuming.'},
+            {lead:'EX-03 Helipad', sub:'Timed', body:'Opens on a timer with a HUD countdown — miss it and it closes. Good for fast runs.'},
+          ]},
+          { kind:'list', title:'BOSS INTEL', items:[
+            {lead:'"Peregrine"', sub:'Radar Station', body:'Long-range suppressor. Drops <span class="hl">premium optics and mods</span>. Close the gap — do not trade sniper shots.'},
+          ]},
+          { kind:'route', title:'SUGGESTED ROUTE', items:[
+            'Land at the farmhouse, restock, and split roles (who snipes, who pushes).',
+            'Advance at mid-range using contour lines and rocks as cover; avoid the open valley floor.',
+            'The hotel is high risk/reward — if unsure, grab radar electronics instead.',
+            'Heal and reload before extracting; the long exit routes are where you get picked off.',
+          ]},
+          { kind:'tips', title:'FIELD TIPS', items:[
+            'Long fights dominate — a good scope is often worth more than an extra armor tier.',
+            'The hotel rooftop is a classic perch; look up before you enter.',
+            'Wind is loud and masks footsteps — pre-aim with vision instead of relying on sound.',
+          ]},
+        ]
+      }
+    },
+
+    'map-bakshi': {
+      zh: {
+        eyebrow: 'MAP-03 · 烽火地带', name: '巴克什',
+        tagline: '高密度城市巷战，皇家博物馆是全图最肥也最危险的金库。',
+        tags: [{label:'进阶',cls:''},{label:'机密/绝密',cls:'hot'}],
+        sections: [
+          { kind:'zones', title:'关键搜刮区 / KEY LOOT ZONES', items:[
+            {name:'皇家博物馆', loot:'文物 · 黄金 · 顶级协议箱', risk:'high', note:'全图收益天花板，多入口、回廊与中庭，三方必争，没小队别硬进。'},
+            {name:'巴别塔', loot:'高层保险柜 · 钥匙房', risk:'high', note:'垂直空间，楼梯与电梯口是绞肉机，逐层清理、控好下方。'},
+            {name:'老城集市', loot:'现金 · 杂货 · 弹药', risk:'mid', note:'巷道纵横、视线短，近战武器吃香，转角伏击高发。'},
+            {name:'地铁站', loot:'随机军需 · 通道', risk:'mid', note:'连通多区域的地下枢纽，转点快但封闭，进出口都要架枪。'},
+          ]},
+          { kind:'list', title:'撤离点 / EXTRACTION', items:[
+            {lead:'EX-01 城南检查站', sub:'无条件', body:'常驻撤离，外围相对安全，新手优先。'},
+            {lead:'EX-02 博物馆后巷', sub:'需门卡', body:'收益高，需<span class="hl">行政门卡</span>开启，紧贴肥点适合贪一波。'},
+            {lead:'EX-03 屋顶直升机', sub:'限时', body:'限时开放，需爬高暴露，撤离瞬间最危险。'},
+          ]},
+          { kind:'list', title:'头目情报 / BOSS INTEL', items:[
+            {lead:'「狱长」', sub:'博物馆中庭', body:'重甲近战，掉落<span class="hl">绝密钥匙与高级甲</span>。利用回廊拉枪线，别被贴脸。'},
+          ]},
+          { kind:'route', title:'推荐路线 / SUGGESTED ROUTE', items:[
+            '城南检查站附近落地，先摸集市攒消耗与近战枪。',
+            '走地铁快速转点，避开开阔主街被架。',
+            '博物馆 / 巴别塔二选一，听枪声判断哪边人少。',
+            '逐房间清，留一人看后背与撤离方向。',
+            '肥了就近走 EX-01，别为 EX-02 的收益赌命。',
+          ]},
+          { kind:'tips', title:'干货提示 / FIELD TIPS', items:[
+            '城市图近战遭遇多，副武器带把冲锋枪或霰弹。',
+            '手雷与闪光在巷战价值翻倍，进门先扔。',
+            '博物馆听到三方交火时，蹲外围等他们打完再进。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'MAP-03 · HAZARD OP', name: 'Bakshi',
+        tagline: 'Dense urban CQB; the Royal Museum is the richest and deadliest vault on the map.',
+        tags: [{label:'Advanced',cls:''},{label:'Secret/Top Secret',cls:'hot'}],
+        sections: [
+          { kind:'zones', title:'KEY LOOT ZONES', items:[
+            {name:'Royal Museum', loot:'Artifacts · Gold · Top Crate', risk:'high', note:'The map’s loot ceiling. Many entrances, galleries and a central hall — contested by all. Never solo it.'},
+            {name:'Babel Tower', loot:'High-floor Safes · Key Rooms', risk:'high', note:'Vertical fight. Stairwells and elevator mouths are meat grinders — clear floor by floor and watch below.'},
+            {name:'Old Bazaar', loot:'Cash · Goods · Ammo', risk:'mid', note:'A maze of short-sightline alleys. SMGs shine; corner ambushes are everywhere.'},
+            {name:'Metro Station', loot:'Random Crate · Tunnels', risk:'mid', note:'Underground hub linking zones. Fast to rotate but enclosed — aim at every entrance.'},
+          ]},
+          { kind:'list', title:'EXTRACTION', items:[
+            {lead:'EX-01 South Checkpoint', sub:'No condition', body:'Always-on exit on the safer outskirts — best for newcomers.'},
+            {lead:'EX-02 Museum Back Alley', sub:'Needs keycard', body:'High reward; needs an <span class="hl">admin keycard</span>. Hugs the loot zone — good for a greedy run.'},
+            {lead:'EX-03 Rooftop Heli', sub:'Timed', body:'Timed and exposed — you must climb high. The extraction moment is the most dangerous.'},
+          ]},
+          { kind:'list', title:'BOSS INTEL', items:[
+            {lead:'"Warden"', sub:'Museum Hall', body:'Armored brawler. Drops a <span class="hl">Top Secret key and premium armor</span>. Use the galleries to keep a line — never let it reach you.'},
+          ]},
+          { kind:'route', title:'SUGGESTED ROUTE', items:[
+            'Land near the South Checkpoint; hit the bazaar for consumables and a CQB gun.',
+            'Take the metro to rotate fast and avoid the exposed main streets.',
+            'Pick Museum OR Babel — read gunfire to find the quieter side.',
+            'Clear room by room; keep one player on your back and the exit.',
+            'Once heavy, take the nearest EX-01 — do not bet your life on EX-02.',
+          ]},
+          { kind:'tips', title:'FIELD TIPS', items:[
+            'Urban maps mean close encounters — carry an SMG or shotgun as a secondary.',
+            'Grenades and flashbangs double in value here — cook one before each doorway.',
+            'When you hear a three-way fight in the museum, wait on the edge and clean up after.',
+          ]},
+        ]
+      }
+    },
+
+    'map-spaceport': {
+      zh: {
+        eyebrow: 'MAP-04 · 烽火地带', name: '航天基地',
+        tagline: '全图最高烈度，总裁室是天花板收益，开阔跑道是死亡走廊。',
+        tags: [{label:'顶级',cls:'hot'},{label:'机密/绝密',cls:'hot'}],
+        sections: [
+          { kind:'zones', title:'关键搜刮区 / KEY LOOT ZONES', items:[
+            {name:'总裁室', loot:'天花板协议箱 · 顶级现金 · 绝密情报', risk:'high', note:'全图最肥，位置深、撤离远，进得去出不来是常态，没万全准备别去。'},
+            {name:'发射塔', loot:'高级电子件 · 钥匙房', risk:'high', note:'垂直高点，火力压制位，也是头目刷新区。'},
+            {name:'控制中心', loot:'情报 · 军需箱', risk:'mid', note:'相对安全的中等收益点，适合稳健局的主要目标。'},
+            {name:'机库', loot:'工业 · 弹药 · 载具部件', risk:'mid', note:'空间大、掩体多，转点与补给的中继站。'},
+          ]},
+          { kind:'list', title:'撤离点 / EXTRACTION', items:[
+            {lead:'EX-01 外围围栏', sub:'无条件', body:'边缘常驻撤离，离肥点远但最安全。'},
+            {lead:'EX-02 发射台', sub:'需双钥匙', body:'高收益深处撤离，需<span class="hl">两把控制钥匙</span>，路线穿过跑道极度暴露。'},
+            {lead:'EX-03 地下机库', sub:'随机', body:'随机开放的隐蔽撤离，封闭但安全，适合带肥逃生。'},
+          ]},
+          { kind:'list', title:'头目情报 / BOSS INTEL', items:[
+            {lead:'「指挥官」', sub:'发射塔', body:'精英小队随行，掉落<span class="hl">绝密钥匙卡与顶级甲</span>。先解决随从，再处理本体。'},
+          ]},
+          { kind:'route', title:'推荐路线 / SUGGESTED ROUTE', items:[
+            '外围围栏附近落地，贴墙绕行，绝不横穿跑道。',
+            '先吃控制中心的稳健收益，观察跑道人流。',
+            '队伍齐整、弹药充足才考虑总裁室或发射塔。',
+            '进总裁室前规划好退路，安排专人守门与撤离点。',
+            '宁可少拿走 EX-01，也别为 EX-02 赌上整队。',
+          ]},
+          { kind:'tips', title:'干货提示 / FIELD TIPS', items:[
+            '这图不是给单人开荒的，至少双排再来。',
+            '跑道用烟雾弹掩护横穿，否则就是活靶。',
+            '总裁室收益高但撤离率低，别上头。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'MAP-04 · HAZARD OP', name: 'Spaceport',
+        tagline: 'The highest-intensity map; the CEO office is peak loot, the open runway is a death corridor.',
+        tags: [{label:'Elite',cls:'hot'},{label:'Secret/Top Secret',cls:'hot'}],
+        sections: [
+          { kind:'zones', title:'KEY LOOT ZONES', items:[
+            {name:'CEO Office', loot:'Top Crate · Peak Cash · TS Intel', risk:'high', note:'The richest spot, but deep with a far exit. Getting in but not out is the norm — never go unprepared.'},
+            {name:'Launch Tower', loot:'Premium Electronics · Key Rooms', risk:'high', note:'Vertical high ground and a suppression perch — also a boss spawn.'},
+            {name:'Control Center', loot:'Intel · Crate', risk:'mid', note:'A safer mid-value spot — the right primary objective for a steady run.'},
+            {name:'Hangar', loot:'Industrial · Ammo · Vehicle Parts', risk:'mid', note:'Spacious with lots of cover — a relay point for rotations and resupply.'},
+          ]},
+          { kind:'list', title:'EXTRACTION', items:[
+            {lead:'EX-01 Perimeter Fence', sub:'No condition', body:'Always-on edge exit. Far from the loot but the safest.'},
+            {lead:'EX-02 Launch Pad', sub:'Needs two keys', body:'A deep, high-reward exit needing <span class="hl">two control keys</span>. The route crosses the runway — extremely exposed.'},
+            {lead:'EX-03 Underground Hangar', sub:'Random', body:'A random, hidden exit — enclosed but safe. Good for escaping with a heavy bag.'},
+          ]},
+          { kind:'list', title:'BOSS INTEL', items:[
+            {lead:'"Commander"', sub:'Launch Tower', body:'Travels with an elite squad. Drops a <span class="hl">Top Secret keycard and top armor</span>. Kill the escorts first, then the boss.'},
+          ]},
+          { kind:'route', title:'SUGGESTED ROUTE', items:[
+            'Land near the perimeter fence, hug walls, and never cross the open runway.',
+            'Take the steady value of the Control Center first; watch runway traffic.',
+            'Only consider the CEO Office or Launch Tower with a full squad and ample ammo.',
+            'Plan your exit before entering the CEO Office; assign a door-watcher and an extract.',
+            'Better to leave with less via EX-01 than to bet the whole squad on EX-02.',
+          ]},
+          { kind:'tips', title:'FIELD TIPS', items:[
+            'This map is not for solo learning — bring at least a duo.',
+            'Smoke the runway before crossing, or you are a sitting duck.',
+            'The CEO Office pays big but extracts poorly — do not get tunnel vision.',
+          ]},
+        ]
+      }
+    },
+
+    'mode-hazard': {
+      zh: {
+        eyebrow: 'M_01 · 游戏模式', name: '烽火地带',
+        tagline: '塔科夫式撤离：带装备进图、搜物资、活着出来。',
+        tags: [{label:'核心玩法',cls:''}],
+        sections: [
+          { kind:'article', paras:[
+            '这是三角洲行动最硬核、也最有"赌性"的模式。你带着自己的装备进图，地图里散布着价值不一的物资，目标只有一个——活着走到撤离点。一旦阵亡，身上的所有东西（含带进去的装备）都会留给击杀你的人。',
+            {quote:'赢家不是杀人最多的，而是带着东西安全走出去的那个。'},
+            '正因为风险真实，物价知识才是真正的门槛。知道什么值钱、什么该丢、什么时候该撤，比枪法更早决定你的盈亏。',
+          ]},
+          { kind:'list', title:'资源密级 / LOOT TIERS', items:[
+            {lead:'常规 / Normal', sub:'低门槛', body:'入门密级，搜刮价值低但战斗压力小，跑刀练手首选。'},
+            {lead:'机密 / Secret', sub:'中收益', body:'物资明显升级，对抗强度上升，需要基础装备与意识。'},
+            {lead:'绝密 / Top Secret', sub:'高风险高回报', body:'顶级物资与头目，遇到的都是带肥的老手，单局可暴富也可血亏。'},
+          ]},
+          { kind:'tips', title:'入门铁律 / GOLDEN RULES', items:[
+            '撤离率 > 击杀数，能走就走，别贪最后一个箱子。',
+            '穷的时候穿"裤衩"跑刀，富的时候也别一次全压上。',
+            '听声辨位是核心技能，戴好耳机。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'M_01 · GAME MODE', name: 'Hazard Operations',
+        tagline: 'Tarkov-style extraction: gear up, loot, get out alive.',
+        tags: [{label:'Core Mode',cls:''}],
+        sections: [
+          { kind:'article', paras:[
+            "This is Delta Force's most hardcore and most high-stakes mode. You bring your own gear into a map scattered with loot of varying value, and the only goal is to reach an extraction point alive. Die, and everything on you — including the gear you brought — goes to whoever killed you.",
+            {quote:'The winner is not the one with the most kills, but the one who walks out with the goods.'},
+            'Because the risk is real, price knowledge is the true barrier to entry. Knowing what is valuable, what to drop, and when to leave decides your profit long before your aim does.',
+          ]},
+          { kind:'list', title:'LOOT TIERS', items:[
+            {lead:'Normal', sub:'Low barrier', body:'Entry tier — low loot value but low combat pressure. Best for knife-runs and practice.'},
+            {lead:'Secret', sub:'Mid reward', body:'Noticeably better loot and rising intensity. Needs basic gear and awareness.'},
+            {lead:'Top Secret', sub:'High risk / reward', body:'Top loot and bosses. Everyone you meet is a kitted veteran — one run can make or break you.'},
+          ]},
+          { kind:'tips', title:'GOLDEN RULES', items:[
+            'Extraction rate > kills. If you can leave, leave — do not chase that last crate.',
+            'Run "naked" when poor; even when rich, do not commit everything at once.',
+            'Sound is your core skill — wear good headphones.',
+          ]},
+        ]
+      }
+    },
+
+    'mode-warfare': {
+      zh: {
+        eyebrow: 'M_02 · 游戏模式', name: '全面战场',
+        tagline: '48v48 海陆空大团战，不亏物资，练枪赚币两相宜。',
+        tags: [{label:'轻竞技',cls:'cool'}],
+        sections: [
+          { kind:'article', paras:[
+            '如果说烽火地带是"赌场"，全面战场就是"健身房"。两支 48 人的队伍在大地图上争夺据点，可以开黑鹰直升机、坦克、装甲车，阵亡只是重生，不损失任何物资。',
+            '对新手来说，这里是最好的起点：熟悉枪感、键位、载具操作，顺便积累哈弗币与经验，再去烽火地带交学费就没那么疼。',
+          ]},
+          { kind:'list', title:'上手重点 / FOCUS', items:[
+            {lead:'据点争夺', sub:'团队目标', body:'跟着大部队推点，别一个人莽，人数优势是胜负关键。'},
+            {lead:'载具运用', sub:'海陆空', body:'直升机运兵、坦克破点、装甲车突进，学会用载具改变战局。'},
+            {lead:'兵种搭配', sub:'职业体系', body:'突击、工程、支援、侦察各司其职，合理搭配比个人秀更重要。'},
+          ]},
+          { kind:'tips', title:'干货提示 / TIPS', items:[
+            '新号先来这里把枪感与键位练熟，再进烽火地带。',
+            '不亏物资，大胆试枪试改装，找到顺手的配置。',
+            '赢局给的币与经验可观，开荒期是稳定收入来源。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'M_02 · GAME MODE', name: 'Warfare',
+        tagline: '48v48 combined-arms warfare. No gear loss — great for practice and coins.',
+        tags: [{label:'Casual',cls:'cool'}],
+        sections: [
+          { kind:'article', paras:[
+            "If Hazard Ops is the casino, Warfare is the gym. Two 48-player teams fight over objectives on a large map with Black Hawk helos, tanks, and APCs. Dying just means respawning — you lose nothing.",
+            'For newcomers it is the best starting point: learn weapon feel, keybinds, and vehicles while stacking Haavk coins and XP, so paying tuition in Hazard Ops hurts less.',
+          ]},
+          { kind:'list', title:'FOCUS', items:[
+            {lead:'Capture Points', sub:'Team objective', body:'Push with the main force — do not lone-wolf. Numbers advantage decides the fight.'},
+            {lead:'Vehicles', sub:'Air / Land', body:'Helos for transport, tanks to break points, APCs to push. Learn to swing fights with vehicles.'},
+            {lead:'Class Synergy', sub:'Roles', body:'Assault, Engineer, Support, Recon each have a job — good composition beats solo highlights.'},
+          ]},
+          { kind:'tips', title:'TIPS', items:[
+            'Take a fresh account here first to drill weapon feel and keybinds before Hazard Ops.',
+            'With no gear loss, freely test guns and builds to find what feels right.',
+            'Winning rounds pays solid coins and XP — a steady income while starting out.',
+          ]},
+        ]
+      }
+    },
+
+    'mode-bhd': {
+      zh: {
+        eyebrow: 'M_03 · 游戏模式', name: '黑鹰坠落',
+        tagline: '以 2001 年同名电影为蓝本的剧情战役，单人或小队推进。',
+        tags: [{label:'剧情战役',cls:''}],
+        sections: [
+          { kind:'article', paras:[
+            '黑鹰坠落是基于 2001 年经典战争电影重制的剧情战役，还原摩加迪沙之战的紧张叙事。它不像前两个模式强调对抗，而是提供一段有头有尾、可单人也可小队合作推进的战役体验。',
+            '适合想喘口气、体验剧情与场景演出的玩家，也是熟悉游戏世界观的好入口。',
+          ]},
+          { kind:'list', title:'体验要点 / NOTES', items:[
+            {lead:'叙事驱动', sub:'电影改编', body:'跟随剧情节点推进，重制的场景与演出是核心看点。'},
+            {lead:'可单可组', sub:'1-N 人', body:'支持单人独自推进，也能组队协作通关。'},
+            {lead:'难度分级', sub:'可选', body:'提供不同难度，休闲党与硬核党都能找到合适挑战。'},
+          ]},
+          { kind:'tips', title:'干货提示 / TIPS', items:[
+            '想换换脑子、不想亏装备时，来打一段剧情。',
+            '组队推进体验更好，配合演出更有代入感。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'M_03 · GAME MODE', name: 'Black Hawk Down',
+        tagline: 'A story campaign based on the 2001 film — play solo or co-op.',
+        tags: [{label:'Campaign',cls:''}],
+        sections: [
+          { kind:'article', paras:[
+            'Black Hawk Down is a story campaign remastered from the classic 2001 war film, recreating the tense narrative of the Battle of Mogadishu. Unlike the other two modes, it is not about PvP — it offers a complete, beginning-to-end campaign playable solo or in co-op.',
+            'It suits players who want to catch their breath and enjoy story and set-pieces, and it is a great way to learn the game world.',
+          ]},
+          { kind:'list', title:'NOTES', items:[
+            {lead:'Narrative-driven', sub:'Film adaptation', body:'Progress through story beats — the remastered scenes and set-pieces are the highlight.'},
+            {lead:'Solo or Co-op', sub:'1-N players', body:'Push alone or rally a squad to clear it together.'},
+            {lead:'Difficulty tiers', sub:'Optional', body:'Multiple difficulties so both casual and hardcore players find a fit.'},
+          ]},
+          { kind:'tips', title:'TIPS', items:[
+            'Drop in for a story run when you want a break and do not want to risk gear.',
+            'Co-op feels better — the set-pieces are more immersive with a squad.',
+          ]},
+        ]
+      }
+    },
+
+    'wpn-m4a1': {
+      zh: {
+        eyebrow: 'M4A1 · 突击步枪 · S 级', name: 'M4A1 · 中距通用',
+        tagline: '后坐力柔顺、改装池深，几乎适配所有地图的版本答案。',
+        tags: [{label:'S 级',cls:''},{label:'中距',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'武器面板 / WEAPON STATS', items:[
+            {label:'伤害',num:72},{label:'操控',num:84},{label:'射程',num:68},{label:'射速',num:78},
+          ]},
+          { kind:'build', title:'推荐改装 / RECOMMENDED BUILD', items:[
+            {slot:'枪口', part:'战术消焰器', note:'压枪口跳动，减少开火暴露。'},
+            {slot:'枪管', part:'14.5" 精度枪管', note:'兼顾射程与机动，中距最优解。'},
+            {slot:'握把', part:'垂直前握把', note:'进一步压低垂直后坐。'},
+            {slot:'弹匣', part:'30 发标准弹匣', note:'不牺牲换弹速度的容量平衡。'},
+            {slot:'瞄具', part:'红点 / 3x 可切换', note:'按交战距离切换，中近距通吃。'},
+            {slot:'枪托', part:'轻量化枪托', note:'提升举枪与转身速度。'},
+          ]},
+          { kind:'chips', title:'推荐弹药 / AMMO', items:[
+            'M855A1 · <b>穿甲均衡</b>', 'M995 · <b>高穿甲</b>（打高甲）', '4 级甲场景首选 <b>M855A1</b>',
+          ]},
+          { kind:'proscons', pros:['后坐力极易控制','改装池深、容错高','弹道稳定，中距点射精准'], cons:['单发伤害中规中矩','打高级甲依赖好弹药','近距不如冲锋枪灵活'] },
+          { kind:'chips', title:'适用地图 / BEST ON', items:['长弓溪谷','航天基地','零号大坝'] },
+          { kind:'tips', title:'使用提示 / TIPS', items:[
+            '中距点射 / 短连发，别全自动泼水。',
+            '配高穿弹时，面对 4-5 级甲也有还手之力。',
+            '零氪版去掉精度枪管也能打，性价比依旧高。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'M4A1 · ASSAULT RIFLE · S-TIER', name: 'M4A1 · Mid-Range All-Rounder',
+        tagline: 'Soft recoil and a deep mod pool — the answer for almost every map.',
+        tags: [{label:'S-Tier',cls:''},{label:'Mid',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'WEAPON STATS', items:[
+            {label:'DMG',num:72},{label:'CTRL',num:84},{label:'RNG',num:68},{label:'ROF',num:78},
+          ]},
+          { kind:'build', title:'RECOMMENDED BUILD', items:[
+            {slot:'Muzzle', part:'Tactical Flash Hider', note:'Tames muzzle climb and cuts firing signature.'},
+            {slot:'Barrel', part:'14.5" Accuracy Barrel', note:'Balances range and mobility — the mid-range sweet spot.'},
+            {slot:'Grip', part:'Vertical Foregrip', note:'Further reduces vertical recoil.'},
+            {slot:'Mag', part:'30-rd Standard', note:'Capacity without hurting reload speed.'},
+            {slot:'Optic', part:'Red Dot / 3x swap', note:'Swap by engagement range — covers close to mid.'},
+            {slot:'Stock', part:'Lightweight Stock', note:'Faster ADS and turn speed.'},
+          ]},
+          { kind:'chips', title:'AMMO', items:[
+            'M855A1 · <b>balanced AP</b>', 'M995 · <b>high AP</b> (vs heavy armor)', 'Default <b>M855A1</b> vs Lv.4 armor',
+          ]},
+          { kind:'proscons', pros:['Extremely controllable recoil','Deep mod pool, high forgiveness','Stable ballistics, precise mid-range taps'], cons:['Average per-shot damage','Needs good ammo vs high armor','Less nimble than an SMG up close'] },
+          { kind:'chips', title:'BEST ON', items:['Longbow Canyon','Spaceport','Zero Dam'] },
+          { kind:'tips', title:'TIPS', items:[
+            'Tap or short-burst at range — do not spray full-auto.',
+            'With high-AP ammo it can answer even Lv.4-5 armor.',
+            'The budget build (drop the accuracy barrel) still performs — great value.',
+          ]},
+        ]
+      }
+    },
+
+    'wpn-akm': {
+      zh: {
+        eyebrow: 'AKM · 突击步枪 · S 级', name: 'AKM · 高伤近战',
+        tagline: '单发伤害爆炸的跑刀之王，弹药便宜、回本快。',
+        tags: [{label:'S 级',cls:''},{label:'近-中距',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'武器面板 / WEAPON STATS', items:[
+            {label:'伤害',num:92},{label:'操控',num:54},{label:'射程',num:60},{label:'射速',num:62},
+          ]},
+          { kind:'build', title:'推荐改装 / RECOMMENDED BUILD', items:[
+            {slot:'枪口', part:'制退器', note:'对抗 AK 的强后坐，必装。'},
+            {slot:'握把', part:'斜角前握把', note:'改善首发上跳与平移。'},
+            {slot:'弹匣', part:'7.62 30 发', note:'兼顾容量与换弹。'},
+            {slot:'瞄具', part:'红点', note:'近中距快速瞄准。'},
+            {slot:'枪托', part:'战术枪托', note:'压一部分后坐，提升稳定。'},
+          ]},
+          { kind:'chips', title:'推荐弹药 / AMMO', items:[
+            '7.62 PS · <b>性价比</b>', '7.62 BP · <b>穿甲</b>', '近距两三枪带走无甲目标',
+          ]},
+          { kind:'proscons', pros:['单发伤害极高','弹药便宜，跑刀首选','近距对枪极具压制力'], cons:['后坐力大，远距难控','射速偏低','改装上限不如 M4'] },
+          { kind:'chips', title:'适用地图 / BEST ON', items:['零号大坝','巴克什','近距图通用'] },
+          { kind:'tips', title:'使用提示 / TIPS', items:[
+            '当跑刀枪用，亏了也不心疼。',
+            '近距点两枪即可，别恋战。',
+            '远距交火吃亏，能拉近就拉近。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'AKM · ASSAULT RIFLE · S-TIER', name: 'AKM · High-Damage CQB',
+        tagline: 'Explosive per-shot damage with cheap ammo — the king of budget runs.',
+        tags: [{label:'S-Tier',cls:''},{label:'CQB',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'WEAPON STATS', items:[
+            {label:'DMG',num:92},{label:'CTRL',num:54},{label:'RNG',num:60},{label:'ROF',num:62},
+          ]},
+          { kind:'build', title:'RECOMMENDED BUILD', items:[
+            {slot:'Muzzle', part:'Compensator', note:'Essential against the AK’s heavy recoil.'},
+            {slot:'Grip', part:'Angled Foregrip', note:'Improves first-shot kick and pan.'},
+            {slot:'Mag', part:'7.62 30-rd', note:'Balances capacity and reload.'},
+            {slot:'Optic', part:'Red Dot', note:'Fast acquisition at close-mid range.'},
+            {slot:'Stock', part:'Tactical Stock', note:'Soaks some recoil, adds stability.'},
+          ]},
+          { kind:'chips', title:'AMMO', items:[
+            '7.62 PS · <b>value</b>', '7.62 BP · <b>AP</b>', 'Two-three shots drop unarmored targets up close',
+          ]},
+          { kind:'proscons', pros:['Massive per-shot damage','Cheap ammo, ideal for runs','Brutal suppression up close'], cons:['Heavy recoil, hard at range','Lower fire rate','Lower mod ceiling than the M4'] },
+          { kind:'chips', title:'BEST ON', items:['Zero Dam','Bakshi','Any CQB map'] },
+          { kind:'tips', title:'TIPS', items:[
+            'Treat it as a knife-run gun — no tears if you lose it.',
+            'Two taps up close, then disengage — do not linger.',
+            'You lose long-range trades; close the distance whenever you can.',
+          ]},
+        ]
+      }
+    },
+
+    'wpn-scar': {
+      zh: {
+        eyebrow: 'SCAR-H · 战斗步枪 · A 级', name: 'SCAR-H · 远程压制',
+        tagline: '7.62 大口径远程压制，弹道修正后跌出 S，仍是远距硬通货。',
+        tags: [{label:'A 级',cls:''},{label:'远距',cls:''}],
+        sections: [
+          { kind:'stats', title:'武器面板 / WEAPON STATS', items:[
+            {label:'伤害',num:86},{label:'操控',num:62},{label:'射程',num:88},{label:'射速',num:58},
+          ]},
+          { kind:'build', title:'推荐改装 / RECOMMENDED BUILD', items:[
+            {slot:'枪口', part:'远射消焰器', note:'减少远距弹道偏移与暴露。'},
+            {slot:'枪管', part:'长枪管', note:'拉满有效射程。'},
+            {slot:'握把', part:'双脚架 / 前握把', note:'架枪时稳定性大幅提升。'},
+            {slot:'弹匣', part:'20 发 7.62', note:'大口径容量有限，注意补弹。'},
+            {slot:'瞄具', part:'3-6x 可变倍镜', note:'远距交战核心。'},
+            {slot:'枪托', part:'精准枪托', note:'降低呼吸与举枪晃动。'},
+          ]},
+          { kind:'chips', title:'推荐弹药 / AMMO', items:[
+            '7.62 NATO M80 · <b>通用</b>', 'M61 · <b>高穿甲</b>', '远距优先穿甲弹',
+          ]},
+          { kind:'proscons', pros:['远距单发伤害高','射程与精度优秀','架枪压制力强'], cons:['弹道修正后操控变难','射速低、容错差','近距吃大亏'] },
+          { kind:'chips', title:'适用地图 / BEST ON', items:['长弓溪谷','航天基地'] },
+          { kind:'tips', title:'使用提示 / TIPS', items:[
+            '当远距点名枪用，别拿去打巷战。',
+            '架枪 / 卧倒能显著提升稳定。',
+            '配可变倍镜，远近都能应付一下。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'SCAR-H · BATTLE RIFLE · A-TIER', name: 'SCAR-H · Long-Range Suppression',
+        tagline: 'A 7.62 long-range workhorse; dropped from S after the rework but still strong at range.',
+        tags: [{label:'A-Tier',cls:''},{label:'Long',cls:''}],
+        sections: [
+          { kind:'stats', title:'WEAPON STATS', items:[
+            {label:'DMG',num:86},{label:'CTRL',num:62},{label:'RNG',num:88},{label:'ROF',num:58},
+          ]},
+          { kind:'build', title:'RECOMMENDED BUILD', items:[
+            {slot:'Muzzle', part:'Long-Range Flash Hider', note:'Reduces drift and signature at distance.'},
+            {slot:'Barrel', part:'Long Barrel', note:'Maxes effective range.'},
+            {slot:'Grip', part:'Bipod / Foregrip', note:'Big stability gain when mounted.'},
+            {slot:'Mag', part:'20-rd 7.62', note:'Big-bore capacity is limited — mind your reloads.'},
+            {slot:'Optic', part:'3-6x Variable', note:'The core of long-range fights.'},
+            {slot:'Stock', part:'Precision Stock', note:'Reduces breath sway and ADS wobble.'},
+          ]},
+          { kind:'chips', title:'AMMO', items:[
+            '7.62 NATO M80 · <b>general</b>', 'M61 · <b>high AP</b>', 'Prioritize AP at distance',
+          ]},
+          { kind:'proscons', pros:['High per-shot damage at range','Excellent range and accuracy','Strong mounted suppression'], cons:['Harder to control after the rework','Low fire rate, low forgiveness','Heavily disadvantaged up close'] },
+          { kind:'chips', title:'BEST ON', items:['Longbow Canyon','Spaceport'] },
+          { kind:'tips', title:'TIPS', items:[
+            'Use it as a long-range marksman gun — not for alley fights.',
+            'Mounting / going prone improves stability dramatically.',
+            'Run a variable optic so it can cope at both ranges.',
+          ]},
+        ]
+      }
+    },
+
+    'wpn-mp5': {
+      zh: {
+        eyebrow: 'MP5 · 冲锋枪 · A 级', name: 'MP5 · 室内突袭',
+        tagline: '操控与射速拉满的室内之王，巷战贴脸的不二之选。',
+        tags: [{label:'A 级',cls:''},{label:'室内',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'武器面板 / WEAPON STATS', items:[
+            {label:'伤害',num:48},{label:'操控',num:94},{label:'射程',num:34},{label:'射速',num:90},
+          ]},
+          { kind:'build', title:'推荐改装 / RECOMMENDED BUILD', items:[
+            {slot:'枪口', part:'消音器', note:'室内不暴露位置，偷袭利器。'},
+            {slot:'握把', part:'前握把', note:'泼火时压住散布。'},
+            {slot:'弹匣', part:'30 发扩容', note:'室内连续交火够用。'},
+            {slot:'瞄具', part:'红点 / 全息', note:'贴脸快速索敌。'},
+            {slot:'枪托', part:'伸缩枪托', note:'极致的举枪与移动速度。'},
+          ]},
+          { kind:'chips', title:'推荐弹药 / AMMO', items:[
+            '9mm 标准 · <b>通用</b>', '9mm 穿甲 · 打轻甲', '遇高甲果断换枪或绕后',
+          ]},
+          { kind:'proscons', pros:['操控与射速顶级','室内贴脸压制力强','换弹快、机动高'], cons:['射程极短','单发伤害低，打甲乏力','开阔地形几乎无用'] },
+          { kind:'chips', title:'适用地图 / BEST ON', items:['巴克什','零号大坝室内'] },
+          { kind:'tips', title:'使用提示 / TIPS', items:[
+            '当副武器带，配一把步枪应对远距。',
+            '室内拐角主动贴脸，先手开火优势巨大。',
+            '消音版偷袭，打完立刻转移别恋战。',
+          ]},
+        ]
+      },
+      en: {
+        eyebrow: 'MP5 · SMG · A-TIER', name: 'MP5 · Indoor Assault',
+        tagline: 'Top control and fire rate — the king of indoor CQB.',
+        tags: [{label:'A-Tier',cls:''},{label:'CQB',cls:'cool'}],
+        sections: [
+          { kind:'stats', title:'WEAPON STATS', items:[
+            {label:'DMG',num:48},{label:'CTRL',num:94},{label:'RNG',num:34},{label:'ROF',num:90},
+          ]},
+          { kind:'build', title:'RECOMMENDED BUILD', items:[
+            {slot:'Muzzle', part:'Suppressor', note:'Stay hidden indoors — a stealth-kill tool.'},
+            {slot:'Grip', part:'Foregrip', note:'Reins in spread when spraying.'},
+            {slot:'Mag', part:'30-rd Extended', note:'Enough for sustained indoor fights.'},
+            {slot:'Optic', part:'Red Dot / Holo', note:'Fast target acquisition up close.'},
+            {slot:'Stock', part:'Collapsible Stock', note:'Maximum ADS and movement speed.'},
+          ]},
+          { kind:'chips', title:'AMMO', items:[
+            '9mm Standard · <b>general</b>', '9mm AP · vs light armor', 'Vs heavy armor — swap guns or flank',
+          ]},
+          { kind:'proscons', pros:['Top-tier control and fire rate','Brutal indoor suppression','Fast reloads, high mobility'], cons:['Very short range','Low per-shot damage, weak vs armor','Nearly useless in the open'] },
+          { kind:'chips', title:'BEST ON', items:['Bakshi','Zero Dam (indoors)'] },
+          { kind:'tips', title:'TIPS', items:[
+            'Carry it as a secondary with a rifle for range.',
+            'Take corners aggressively indoors — first shot wins.',
+            'Use the suppressed build to ambush, then immediately reposition.',
+          ]},
+        ]
+      }
+    },
+
+    'news-1': {
+      zh: {
+        eyebrow: 'PATCH · 2026.05.20', name: '航天基地新增时段事件',
+        tagline: '航天基地引入「前夜 / 长夜 / 终夜」动态时段，照明、刷新与撤离规则随之变化。',
+        tags: [{label:'PATCH',cls:''}],
+        sections: [{ kind:'article', paras:[
+          '本次更新为航天基地加入了「前夜 / 长夜 / 终夜」三段动态时段事件。不同时段下，地图照明、敌人巡逻密度与高价值物资刷新点都会变化，玩家需根据进图时段调整打法。',
+          {quote:'终夜时段照明最差，但总裁室协议箱刷新率显著提高——风险与收益同步拉满。'},
+          '官方同时调整了部分撤离点的开启条件，发射台撤离现在需要两把控制钥匙。建议进图后第一时间留意 HUD 的时段提示与撤离点状态。',
+        ]}]
+      },
+      en: {
+        eyebrow: 'PATCH · 2026.05.20', name: 'Spaceport Time-of-Day Events',
+        tagline: 'Spaceport gains dynamic "Vigil / Long Night / Dead Night" phases — lighting, spawns and exits all shift.',
+        tags: [{label:'PATCH',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'This update adds three dynamic time-of-day events to Spaceport: Vigil, Long Night, and Dead Night. Lighting, enemy patrol density, and high-value spawn points all change by phase, so you must adapt your play to the time you drop in.',
+          {quote:'Dead Night has the worst lighting but a much higher CEO-office crate spawn rate — risk and reward both maxed.'},
+          'Some extraction conditions changed too: the Launch Pad exit now requires two control keys. Watch the HUD phase indicator and exit status the moment you load in.',
+        ]}]
+      }
+    },
+
+    'news-2': {
+      zh: {
+        eyebrow: 'META · 2026.05.14', name: 'SCAR-H 跌出 S 级',
+        tagline: '一次弹道修正改写了中距 META，M4A1 重新坐稳通用王座。',
+        tags: [{label:'META',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'SCAR-H 在本次平衡补丁中接受了弹道修正，远距弹道下坠与后坐恢复都被削弱，连续射击的可控性明显下降，正式跌出 S 级梯队。',
+          '与此同时，M4A1 凭借柔顺的后坐与极深的改装池，重新成为中距通用的版本答案——无论零氪还是天花板配装，它的容错都是同级最高。',
+          '如果你之前主玩 SCAR-H，可以把它退回纯远距点名的定位，中距交火交给 M4A1。',
+        ]}]
+      },
+      en: {
+        eyebrow: 'META · 2026.05.14', name: 'SCAR-H Falls Out of S-Tier',
+        tagline: 'A ballistic rework rewrote the mid-range meta; the M4A1 reclaims the all-rounder throne.',
+        tags: [{label:'META',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'This balance patch reworked the SCAR-H’s ballistics, nerfing long-range drop and recoil recovery. Sustained fire is noticeably harder to control, and it has formally dropped out of the S-tier.',
+          'Meanwhile the M4A1, with its soft recoil and deep mod pool, is again the mid-range answer — its forgiveness is the highest in class, whether budget or fully kitted.',
+          'If you mained the SCAR-H, push it back into a pure long-range marksman role and hand mid-range fights to the M4A1.',
+        ]}]
+      }
+    },
+
+    'news-3': {
+      zh: {
+        eyebrow: 'MAP · 2026.05.08', name: '零号大坝地下通道被淹',
+        tagline: '一场"洪水"封死了零号大坝的地下捷径，跑图节奏被迫重写。',
+        tags: [{label:'MAP',cls:''}],
+        sections: [{ kind:'article', paras:[
+          '零号大坝的地下通道在本次事件中全部被淹，原本连接行政楼与水泥厂的地下捷径暂时无法通行。这条路线的消失，直接改变了整张图的转点节奏与伏击点分布。',
+          '现在更推荐沿水域北侧贴墙推进行政楼，避开暴露的大坝桥面。水泥厂方向的争夺也因为少了地下迂回，变得更正面、更吃枪法。',
+          {quote:'地下没得走，桥面更危险——这张"入门图"短期内难度小幅上调。'},
+        ]}]
+      },
+      en: {
+        eyebrow: 'MAP · 2026.05.08', name: 'Zero Dam Tunnels Flooded',
+        tagline: 'A "flood" sealed Zero Dam’s underground shortcuts, forcing a rewrite of map flow.',
+        tags: [{label:'MAP',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'Zero Dam’s underground passages were fully flooded this event, temporarily cutting the subterranean shortcut between Admin and the Cement Plant. Losing that route directly changes rotation timing and ambush spots across the whole map.',
+          'The recommended approach now hugs the north waterside toward Admin, avoiding the exposed dam bridge. With no underground detour, the Cement Plant fight is more head-on and more aim-dependent.',
+          {quote:'No underground route and a deadlier bridge — this "beginner map" gets a small difficulty bump for now.'},
+        ]}]
+      }
+    },
+
+    'news-4': {
+      zh: {
+        eyebrow: 'EVENT · 2026.05.02', name: '巴克什博物馆双倍掉率',
+        tagline: '周末限时双倍掉率，皇家博物馆成为全服最热的金库。',
+        tags: [{label:'EVENT',cls:''}],
+        sections: [{ kind:'article', paras:[
+          '本周末巴克什皇家博物馆开启限时双倍掉率活动，文物与顶级协议箱的刷新量翻倍。可以预见，这两天博物馆会是全服最拥挤、最血腥的地方。',
+          '推荐路线：城南检查站落地，先去老城集市攒近战武器与消耗，再走地铁站快速转点到博物馆后巷，避开暴露的主街。进馆前务必听清三方交火位置，蹲外围等他们打完再进场收割。',
+          {quote:'人多就意味着撤离更难——带门卡走后巷 EX-02，肥了就走，别贪。'},
+        ]}]
+      },
+      en: {
+        eyebrow: 'EVENT · 2026.05.02', name: 'Bakshi Museum Double Drops',
+        tagline: 'A weekend double-drop event makes the Royal Museum the hottest vault on the server.',
+        tags: [{label:'EVENT',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'This weekend the Bakshi Royal Museum runs a limited double-drop event, doubling artifact and top-crate spawns. Expect the museum to be the most crowded and bloody place on the server for two days.',
+          'Recommended route: land at the South Checkpoint, hit the Old Bazaar for a CQB gun and consumables, then take the metro to rotate to the museum back alley and avoid the exposed main streets. Listen for three-way fights before entering, then clean up from the edge.',
+          {quote:'More players means harder exits — bring a keycard for back-alley EX-02, grab loot, and leave. Do not get greedy.'},
+        ]}]
+      }
+    },
+
+    'news-5': {
+      zh: {
+        eyebrow: 'GUIDE · 2026.04.27', name: '曼德尔砖破译全解析',
+        tagline: '全图最贵的硬通货，破译它意味着巨额收益，也意味着全场暴露。',
+        tags: [{label:'GUIDE',cls:''}],
+        sections: [{ kind:'article', paras:[
+          '曼德尔砖（Mandel Brick）是当前交易行价值最高的硬通货之一，单块价值动辄百万哈弗币。但拿到它并不简单——破译过程需要在固定终端停留较长时间，并会向全图玩家暴露你的位置。',
+          {quote:'破译开始的那一刻，你就成了整张图所有人的目标。'},
+          '建议：仅在小队齐整、控住周边视野时才尝试破译；安排专人守点与撤离方向；完成后立刻走最近的撤离点，绝不贪图额外搜刮。单人遇到曼德尔砖，多数情况下"看一眼就走"才是正确选择。',
+        ]}]
+      },
+      en: {
+        eyebrow: 'GUIDE · 2026.04.27', name: 'Mandel Brick Decoding Guide',
+        tagline: 'The map’s most valuable currency — decoding it means huge profit, and total exposure.',
+        tags: [{label:'GUIDE',cls:''}],
+        sections: [{ kind:'article', paras:[
+          'The Mandel Brick is one of the highest-value hard currencies on the market, often worth over a million Haavk coins each. But getting one is not simple — decoding requires staying at a fixed terminal for a while and broadcasts your position to the entire map.',
+          {quote:'The moment decoding begins, you become a target for everyone on the map.'},
+          'Advice: only attempt decoding with a full squad holding the surrounding sightlines; assign a guard and an exit direction; the instant it finishes, take the nearest extraction and never chase extra loot. Solo, the right call on a Mandel Brick is usually "look, then leave."',
+        ]}]
+      }
+    },
+  };
+
+  function riskLabel(r, lang) {
+    const m = { low: ['低风险','LOW'], mid: ['中风险','MED'], high: ['高风险','HIGH'] };
+    return (m[r] || ['',''])[lang === 'zh' ? 0 : 1];
+  }
+
+  function mkEl(tag, cls, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+
+  function renderSection(sec, lang) {
+    const blk = mkEl('div', 'detail-block');
+    if (sec.title) blk.appendChild(mkEl('div', 'blk-title', sec.title));
+    let inner = null;
+    switch (sec.kind) {
+      case 'zones':
+        inner = mkEl('div', 'zone-grid');
+        sec.items.forEach(z => {
+          const c = mkEl('div', 'zone-item');
+          c.innerHTML = '<div class="zh-top"><h6>' + z.name + '</h6><span class="risk-pill ' + z.risk + '">' + riskLabel(z.risk, lang) + '</span></div>'
+            + (z.loot ? '<div class="loot">' + z.loot + '</div>' : '')
+            + '<p>' + z.note + '</p>';
+          inner.appendChild(c);
+        });
+        break;
+      case 'list':
+        inner = mkEl('div', 'info-list');
+        sec.items.forEach(it => {
+          const li = mkEl('div', 'li');
+          li.innerHTML = '<div class="lead">' + it.lead + (it.sub ? '<span class="sub">' + it.sub + '</span>' : '') + '</div>'
+            + '<div class="body">' + it.body + '</div>';
+          inner.appendChild(li);
+        });
+        break;
+      case 'route':
+        inner = mkEl('div', 'route-steps');
+        sec.items.forEach(s => { const r = mkEl('div', 'rstep'); r.appendChild(mkEl('span', null, s)); inner.appendChild(r); });
+        break;
+      case 'tips':
+        inner = mkEl('ul', 'tip-list');
+        sec.items.forEach(s => inner.appendChild(mkEl('li', null, s)));
+        break;
+      case 'proscons': {
+        inner = mkEl('div', 'proscons');
+        const pros = mkEl('div', 'pc-col pros', '<div class="pc-h">' + (lang === 'zh' ? '优势' : 'PROS') + '</div>');
+        const pu = mkEl('ul'); sec.pros.forEach(p => pu.appendChild(mkEl('li', null, p))); pros.appendChild(pu);
+        const cons = mkEl('div', 'pc-col cons', '<div class="pc-h">' + (lang === 'zh' ? '短板' : 'CONS') + '</div>');
+        const cu = mkEl('ul'); sec.cons.forEach(p => cu.appendChild(mkEl('li', null, p))); cons.appendChild(cu);
+        inner.appendChild(pros); inner.appendChild(cons);
+        break;
+      }
+      case 'stats':
+        inner = mkEl('div', 'stats-big');
+        sec.items.forEach(st => {
+          const s = mkEl('div', 'stat-big');
+          s.innerHTML = '<div class="sb-top"><span class="sb-label">' + st.label + '</span><span class="sb-num">' + st.num + '</span></div>'
+            + '<div class="sb-bar"><span style="width:' + st.num + '%"></span></div>';
+          inner.appendChild(s);
+        });
+        break;
+      case 'build':
+        inner = mkEl('div', 'build-list');
+        sec.items.forEach(b => {
+          const c = mkEl('div', 'build-item');
+          c.innerHTML = '<div class="slot">' + b.slot + '</div><div class="part">' + b.part + '</div>'
+            + (b.note ? '<div class="bnote">' + b.note + '</div>' : '');
+          inner.appendChild(c);
+        });
+        break;
+      case 'chips':
+        inner = mkEl('div', 'chip-row');
+        sec.items.forEach(ch => inner.appendChild(mkEl('span', 'chip', ch)));
+        break;
+      case 'article':
+        inner = mkEl('div', 'article-body');
+        sec.paras.forEach(p => {
+          if (p && typeof p === 'object' && p.quote) inner.appendChild(mkEl('p', 'pullquote', p.quote));
+          else inner.appendChild(mkEl('p', null, p));
+        });
+        break;
+    }
+    if (inner) blk.appendChild(inner);
+    return blk;
+  }
+
+  let currentDetailId = null;
+
+  function renderDetail() {
+    if (!currentDetailId) return;
+    const data = DETAILS[currentDetailId];
+    if (!data) return;
+    const lang = document.getElementById('html-root').getAttribute('lang') || 'zh';
+    const d = data[lang] || data.zh;
+    document.getElementById('modal-eyebrow').textContent = d.eyebrow || '';
+    document.getElementById('modal-title').textContent = d.name || '';
+    const tl = document.getElementById('modal-tagline');
+    tl.textContent = d.tagline || '';
+    tl.style.display = d.tagline ? '' : 'none';
+    const meta = document.getElementById('modal-meta');
+    meta.innerHTML = '';
+    (d.tags || []).forEach(t => meta.appendChild(mkEl('span', 'tag ' + (t.cls || ''), t.label)));
+    const body = document.getElementById('modal-body');
+    body.innerHTML = '';
+    (d.sections || []).forEach(sec => body.appendChild(renderSection(sec, lang)));
+  }
+
+  function openDetail(id) {
+    if (!DETAILS[id]) return;
+    currentDetailId = id;
+    renderDetail();
+    const bd = document.getElementById('modal-backdrop');
+    bd.classList.add('open');
+    document.body.classList.add('modal-open');
+    bd.scrollTop = 0;
+  }
+
+  function closeDetail() {
+    document.getElementById('modal-backdrop').classList.remove('open');
+    document.body.classList.remove('modal-open');
+    currentDetailId = null;
+  }
+
+  document.addEventListener('click', e => {
+    const trigger = e.target.closest('[data-detail]');
+    if (trigger) { e.preventDefault(); openDetail(trigger.getAttribute('data-detail')); }
+  });
+  document.getElementById('modal-close').addEventListener('click', closeDetail);
+  document.getElementById('modal-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'modal-backdrop') closeDetail();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+  // 所有需要翻译的元素用 data-i18n 绑定
+  function applyLang(lang) {
+    // 1. Handle data-i18n-html first (special innerHTML elements)
+    const htmlEls = document.querySelectorAll('[data-i18n-html]');
+    htmlEls.forEach(el => {
+      el.innerHTML = (LANG[lang]['heroT1'] || '')
+        + '<span class="strike">' + (LANG[lang]['heroStrike'] || '') + '</span> '
+        + '<span class="highlight">' + (LANG[lang]['heroHighlight'] || '') + '</span>'
+        + (lang === 'zh' ? '<br>' : '')
+        + (LANG[lang]['heroT2'] || '');
+    });
+
+    // 2. Handle regular data-i18n elements
+    const els = document.querySelectorAll('[data-i18n]');
+    els.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (!key) return;
+      const val = key.split('.').reduce((o, k) => o?.[k], LANG[lang]);
+      if (val !== undefined) {
+        if (el.tagName === 'INPUT') {
+          el.placeholder = val;
+        } else if (el.tagName === 'SPAN' && el.classList.contains('stat-val')) {
+          // skip stat values (numbers)
+        } else {
+          el.innerHTML = val.replace(/&nbsp;/g, ' ');
+        }
+      }
+    });
+    // Update html lang attr
+    document.getElementById('html-root').setAttribute('lang', lang);
+    // Update toggle button
+    const toggle = document.getElementById('lang-toggle');
+    if (toggle) {
+      toggle.textContent = lang === 'zh' ? 'EN' : '中文';
+      toggle.className = 'lang-toggle' + (lang === 'en' ? ' en' : '');
+    }
+    // Save preference
+    try { localStorage.setItem('df_lang', lang); } catch(e) {}
+    // 若详情面板已打开，随语言重新渲染
+    if (currentDetailId) renderDetail();
+  }
+
+  function toggleLang() {
+    const current = document.getElementById('html-root').getAttribute('lang') || 'zh';
+    const next = current === 'zh' ? 'en' : 'zh';
+    applyLang(next);
+  }
+
+  // Init: try saved preference, default zh
+  (function initLang() {
+    let saved = 'zh';
+    try { saved = localStorage.getItem('df_lang') || 'zh'; } catch(e) {}
+    applyLang(saved);
+    document.getElementById('lang-toggle')?.addEventListener('click', toggleLang);
+  })();
+
+  // UTC 时钟
+  function tickClock() {
+    const now = new Date();
+    const h = String(now.getUTCHours()).padStart(2, '0');
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    const s = String(now.getUTCSeconds()).padStart(2, '0');
+    const el = document.getElementById('utc-time');
+    if (el) el.textContent = `UTC ${h}:${m}:${s}`;
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // 平滑滚动激活态
+  const navLinks = document.querySelectorAll('nav.primary a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

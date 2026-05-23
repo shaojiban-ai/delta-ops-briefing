@@ -1,0 +1,14 @@
+{
+  "updatedAt": "2026-05-23T12:34:17.158Z",
+  "dataDate": "5月23日",
+  "status": "pending",
+  "source": {
+    "name": "素颜API",
+    "url": "https://api.suyanw.cn/api/delta_mima.php",
+    "homepage": "https://api.suyanw.cn/doc/delta_mima.php",
+    "server": "cn"
+  },
+  "note": "错误：未找到 5月23日 的密码信息",
+  "lastError": "错误：未找到 5月23日 的密码信息",
+  "maps": []
+}
