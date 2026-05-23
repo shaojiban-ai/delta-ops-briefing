@@ -33,6 +33,16 @@ const MAP_META = {
   潮汐监狱: { code: "MAP-05", en: "Tide Prison" },
 };
 
+// 官方国际服接口 GetPrivateRoomKey 的 data 形如 { slug: "4位码" }
+// 各地图密码门位置是固定的（只有密码每日变），故位置作为静态信息内置。
+const OFFICIAL_SLUG = {
+  zero_dam: { map: "零号大坝", en: "Zero Dam", code: "MAP-01", location: "主变电站右侧 · 地下管道尽头" },
+  longbow_valley: { map: "长弓溪谷", en: "Layali Grove", code: "MAP-02", location: "地图右下角标记点附近的地下入口" },
+  bakshe: { map: "巴克什", en: "Brakkesh", code: "MAP-03", location: "哈曼浴场北侧" },
+  spaceport: { map: "航天基地", en: "Space City", code: "MAP-04", location: "工业区 · 组装车间 2F" },
+  tide_prison: { map: "潮汐监狱", en: "Tide Prison", code: "MAP-05", location: "监狱行政区 1 楼大厅楼梯拐角" },
+};
+
 const args = process.argv.slice(2);
 const hasFlag = (f) => args.includes(f);
 const getOpt = (k) => {
@@ -160,6 +170,35 @@ function normalize(rows) {
   }));
 }
 
+// 官方国际服形态：{ code:0, data:{ slug: "1234", ... } }
+function normalizeOfficial(json) {
+  const d = json?.data;
+  if (!d || Array.isArray(d) || typeof d !== "object") return null;
+  const entries = Object.entries(d).filter(
+    ([, v]) => (typeof v === "string" || typeof v === "number") && /^\d{3,6}$/.test(String(v)),
+  );
+  if (entries.length === 0) return null;
+  // 按内置顺序(MAP-01..05)排列，未知 slug 追加在后
+  const order = Object.keys(OFFICIAL_SLUG);
+  const slugs = [...entries.map(([s]) => s)].sort(
+    (a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99),
+  );
+  return slugs.map((slug) => {
+    const meta = OFFICIAL_SLUG[slug] || { map: slug, en: "", code: "", location: "" };
+    return {
+      map: meta.map,
+      code: meta.code,
+      en: meta.en,
+      rooms: [{ room: "每日密码门", location: meta.location || "", password: String(d[slug]), images: [] }],
+    };
+  });
+}
+
+// 统一入口：先试官方对象形态，再退回素颜API数组形态
+function normalizeAny(json) {
+  return normalizeOfficial(json) ?? normalize(extractRows(json));
+}
+
 async function readPrevious() {
   try {
     return JSON.parse(await readFile(OUT_FILE, "utf8"));
@@ -179,20 +218,39 @@ async function main() {
   const prev = await readPrevious();
   const now = new Date().toISOString();
 
-  // 源选择：配置了官方抓包请求则走官方（国际服），否则走素颜API（国服）
+  // 源选择优先级：
+  //   --input=<file> 手动快照（用抓包贴来的返回直接填充） >
+  //   官方抓包请求(DF_*) > 素颜API(国服回退)
+  const inputFile = getOpt("--input");
   const officialReq = getOfficialReq();
-  const activeSource = officialReq
-    ? { name: "官方 HQ · GetPrivateRoomKey", url: officialReq.url, server: "intl" }
-    : SOURCE;
+  const OFFICIAL_URL = "https://www.playdeltaforce.com/api/proxy/logicial/DfTools/GetPrivateRoomKey";
+  const activeSource =
+    inputFile || officialReq
+      ? { name: "官方 HQ · GetPrivateRoomKey", url: officialReq?.url || OFFICIAL_URL, server: "intl" }
+      : SOURCE;
 
   let result;
   try {
-    const { httpStatus, json, text } = officialReq
-      ? await fetchOfficial(officialReq)
-      : await fetchSource(time);
-    const errMsg = json?.error || (httpStatus >= 400 ? `HTTP ${httpStatus}` : null);
-    const rows = extractRows(json);
-    const maps = normalize(rows);
+    let fetched;
+    if (inputFile) {
+      const raw = await readFile(resolve(process.cwd(), inputFile), "utf8");
+      let j = null;
+      try {
+        j = JSON.parse(raw);
+      } catch {
+        /* keep text */
+      }
+      if (hasFlag("--raw")) console.log("---- INPUT SNAPSHOT ----\n" + raw.slice(0, 1500));
+      fetched = { httpStatus: 200, json: j, text: raw };
+    } else if (officialReq) {
+      fetched = await fetchOfficial(officialReq);
+    } else {
+      fetched = await fetchSource(time);
+    }
+    const { httpStatus, json, text } = fetched;
+    const apiBad = json && json.code != null && json.code !== 0 ? json.msg || `code ${json.code}` : null;
+    const errMsg = json?.error || apiBad || (httpStatus >= 400 ? `HTTP ${httpStatus}` : null);
+    const maps = normalizeAny(json);
 
     if (maps.length > 0) {
       result = {

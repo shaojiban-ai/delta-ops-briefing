@@ -1,14 +1,78 @@
 {
-  "updatedAt": "2026-05-23T12:34:17.158Z",
+  "updatedAt": "2026-05-23T15:11:15.909Z",
   "dataDate": "5月23日",
-  "status": "pending",
+  "status": "ok",
   "source": {
-    "name": "素颜API",
-    "url": "https://api.suyanw.cn/api/delta_mima.php",
-    "homepage": "https://api.suyanw.cn/doc/delta_mima.php",
-    "server": "cn"
+    "name": "官方 HQ · GetPrivateRoomKey",
+    "url": "https://www.playdeltaforce.com/api/proxy/logicial/DfTools/GetPrivateRoomKey",
+    "server": "intl"
   },
-  "note": "错误：未找到 5月23日 的密码信息",
-  "lastError": "错误：未找到 5月23日 的密码信息",
-  "maps": []
+  "note": "",
+  "maps": [
+    {
+      "map": "零号大坝",
+      "code": "MAP-01",
+      "en": "Zero Dam",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "主变电站右侧 · 地下管道尽头",
+          "password": "1392",
+          "images": []
+        }
+      ]
+    },
+    {
+      "map": "长弓溪谷",
+      "code": "MAP-02",
+      "en": "Layali Grove",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "地图右下角标记点附近的地下入口",
+          "password": "4046",
+          "images": []
+        }
+      ]
+    },
+    {
+      "map": "巴克什",
+      "code": "MAP-03",
+      "en": "Brakkesh",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "哈曼浴场北侧",
+          "password": "9503",
+          "images": []
+        }
+      ]
+    },
+    {
+      "map": "航天基地",
+      "code": "MAP-04",
+      "en": "Space City",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "工业区 · 组装车间 2F",
+          "password": "9066",
+          "images": []
+        }
+      ]
+    },
+    {
+      "map": "潮汐监狱",
+      "code": "MAP-05",
+      "en": "Tide Prison",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "监狱行政区 1 楼大厅楼梯拐角",
+          "password": "5916",
+          "images": []
+        }
+      ]
+    }
+  ]
 }
