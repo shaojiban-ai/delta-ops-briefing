@@ -9,6 +9,11 @@ dist/
 *.log
 npm-debug.log*
 
+# secrets / env (官方 token 等敏感信息，切勿提交)
+.env
+.env.*
+!.env.example
+
 # OS / editor
 .DS_Store
 Thumbs.db

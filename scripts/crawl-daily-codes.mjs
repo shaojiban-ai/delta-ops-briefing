@@ -64,6 +64,53 @@ async function fetchSource(time) {
   return { httpStatus: res.status, json, text };
 }
 
+// 官方源：重放一次抓包得到的请求（token 等敏感信息从环境变量读取）
+// 配置方式（二选一）：
+//   1) DF_REQ_JSON='{"url":"...","method":"POST","headers":{...},"body":"..."}'
+//   2) DF_URL=... DF_METHOD=POST DF_HEADERS='{"...":"..."}' DF_BODY='...'
+function getOfficialReq() {
+  if (process.env.DF_REQ_JSON) {
+    try {
+      return JSON.parse(process.env.DF_REQ_JSON);
+    } catch {
+      console.error("DF_REQ_JSON 不是合法 JSON，已忽略。");
+      return null;
+    }
+  }
+  if (process.env.DF_URL) {
+    return {
+      url: process.env.DF_URL,
+      method: process.env.DF_METHOD || "POST",
+      headers: process.env.DF_HEADERS ? JSON.parse(process.env.DF_HEADERS) : {},
+      body: process.env.DF_BODY || undefined,
+    };
+  }
+  return null;
+}
+
+async function fetchOfficial(req) {
+  const res = await fetch(req.url, {
+    method: req.method || "GET",
+    headers: { "User-Agent": UA, ...(req.headers || {}) },
+    body: req.body,
+    redirect: "follow",
+  });
+  const text = await res.text();
+  if (hasFlag("--raw")) {
+    console.log("---- OFFICIAL RAW ----");
+    console.log(`HTTP ${res.status}  ${res.headers.get("content-type")}`);
+    console.log(text.slice(0, 3000));
+    console.log("----------------------");
+  }
+  let json = null;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    /* 保留 text */
+  }
+  return { httpStatus: res.status, json, text };
+}
+
 // 从任意返回里找出"数据行数组"
 function extractRows(json) {
   if (!json) return [];
@@ -132,9 +179,17 @@ async function main() {
   const prev = await readPrevious();
   const now = new Date().toISOString();
 
+  // 源选择：配置了官方抓包请求则走官方（国际服），否则走素颜API（国服）
+  const officialReq = getOfficialReq();
+  const activeSource = officialReq
+    ? { name: "官方 HQ · GetPrivateRoomKey", url: officialReq.url, server: "intl" }
+    : SOURCE;
+
   let result;
   try {
-    const { httpStatus, json, text } = await fetchSource(time);
+    const { httpStatus, json, text } = officialReq
+      ? await fetchOfficial(officialReq)
+      : await fetchSource(time);
     const errMsg = json?.error || (httpStatus >= 400 ? `HTTP ${httpStatus}` : null);
     const rows = extractRows(json);
     const maps = normalize(rows);
@@ -144,7 +199,7 @@ async function main() {
         updatedAt: now,
         dataDate: json?.date || json?.time || todayLabel(),
         status: "ok",
-        source: SOURCE,
+        source: activeSource,
         note: json?.tips || "",
         maps,
       };
@@ -154,7 +209,7 @@ async function main() {
         updatedAt: now,
         dataDate: prev?.dataDate ?? todayLabel(),
         status: "pending",
-        source: SOURCE,
+        source: activeSource,
         note:
           (json && json.error ? json.error : (text || "").trim()) ||
           "今日密码尚未公布，约 9-10 点更新",
@@ -167,7 +222,7 @@ async function main() {
       updatedAt: now,
       dataDate: prev?.dataDate ?? todayLabel(),
       status: "error",
-      source: SOURCE,
+      source: activeSource,
       note: "抓取失败，展示上一次成功的数据",
       lastError: e.message,
       maps: prev?.maps ?? [],
