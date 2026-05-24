@@ -1,77 +1,134 @@
+import { useState } from "react";
 import Section from "../ui/Section";
 import Tag from "../ui/Tag";
-import { seasonInfo, seasonMissions } from "../../data/mock";
+import Modal, { ModalBlock } from "../ui/Modal";
+import { currentSeason, seasonEvents } from "../../data/mock";
 
 const statusMeta = {
-  done: { label: "已完成", cls: "text-safe border-safe", bar: "bg-safe" },
-  active: { label: "进行中", cls: "text-accent border-accent", bar: "bg-accent" },
-  locked: { label: "未解锁", cls: "text-faint border-line-bright", bar: "bg-line-bright" },
+  live: { label: "进行中", cls: "text-safe border-safe", dot: "bg-safe" },
+  upcoming: { label: "即将开启", cls: "text-accent border-accent", dot: "bg-accent" },
+  ended: { label: "已结束", cls: "text-faint border-line-bright", dot: "bg-line-bright" },
 };
+const tagVariant = { 通行证: "default", 新武器: "hot", 新模式: "cool", 抽奖: "default" };
+
+function EventDetail({ e }) {
+  const meta = statusMeta[e.status] || statusMeta.live;
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
+        <Tag variant={tagVariant[e.tag] || "default"}>{e.tag}</Tag>
+        <span className="font-mono text-[12px] text-accent">{e.window}</span>
+        <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border ${meta.cls}`}>{meta.label}</span>
+      </div>
+      <p className="text-sm text-text leading-relaxed">{e.desc}</p>
+      {e.rewards?.length ? (
+        <ModalBlock label="奖励 / 内容">
+          <ul className="space-y-1.5">
+            {e.rewards.map((r) => (
+              <li key={r} className="text-[13px] text-text flex gap-2">
+                <span className="text-accent font-mono shrink-0">◆</span>
+                <span>{r}</span>
+              </li>
+            ))}
+          </ul>
+        </ModalBlock>
+      ) : null}
+      <a
+        href={e.source}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent text-accent font-mono text-xs uppercase tracking-wider px-4 py-2.5 hover:bg-accent hover:text-bg transition-colors"
+      >
+        官方公告原文 ↗
+      </a>
+    </div>
+  );
+}
 
 export default function SeasonMissions() {
-  const tierPct = Math.round((seasonInfo.currentTier / seasonInfo.totalTier) * 100);
+  const [open, setOpen] = useState(null);
+  const active = seasonEvents.find((e) => e.name === open);
 
   return (
     <Section
       id="missions"
-      index="// 02 — 赛季任务 / SEASON PASS"
-      title="当前赛季任务"
+      index="// 02 — 当前赛季 / SEASON"
+      title="当前赛季与活动"
       action={
         <div className="text-right">
-          <div className="font-display text-lg text-accent uppercase tracking-wide">{seasonInfo.season}</div>
-          <div className="font-mono text-[11px] text-dim">{seasonInfo.cycle}</div>
+          <div className="font-display text-lg text-accent uppercase tracking-wide">{currentSeason.name}</div>
+          <div className="font-mono text-[11px] text-dim">{currentSeason.phase}</div>
         </div>
       }
     >
-      {/* 赛季总进度 */}
-      <div className="bg-card border border-line p-4 md:p-5 mb-6 hud-corner">
-        <div className="flex items-center justify-between mb-2 font-mono text-[11px] uppercase tracking-[0.15em] text-dim">
-          <span>赛季等级进度</span>
-          <span className="text-accent">
-            TIER {seasonInfo.currentTier} / {seasonInfo.totalTier}
-          </span>
+      {/* 赛季概览（真实，附官方源） */}
+      <div className="bg-card border border-line p-4 md:p-5 mb-6 hud-corner flex items-start justify-between gap-4 flex-wrap">
+        <div className="min-w-0">
+          <div className="font-mono text-[11px] uppercase tracking-[0.15em] text-dim mb-1">当前赛季</div>
+          <div className="font-display text-2xl uppercase tracking-wide text-text leading-none">
+            {currentSeason.name} <span className="text-accent text-base">// {currentSeason.phase}</span>
+          </div>
+          <p className="text-[12px] text-dim mt-2 max-w-xl">{currentSeason.note}</p>
         </div>
-        <div className="h-2 bg-line overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-cool to-accent" style={{ width: `${tierPct}%` }} />
-        </div>
+        <a
+          href={currentSeason.source}
+          target="_blank"
+          rel="noreferrer"
+          className="font-mono text-[11px] tracking-[0.1em] uppercase text-dim border-b border-line-bright hover:text-accent hover:border-accent pb-0.5 shrink-0"
+        >
+          官方公告 ↗
+        </a>
       </div>
 
-      {/* 阶段任务列表 */}
+      {/* 进行中 / 即将 / 已结束 活动 */}
       <div className="flex flex-col gap-3">
-        {seasonMissions.map((m) => {
-          const meta = statusMeta[m.status];
+        {seasonEvents.map((e) => {
+          const meta = statusMeta[e.status] || statusMeta.live;
           return (
-            <div
-              key={m.stage}
-              className={`bg-card border border-line ${m.status === "active" ? "border-l-2 border-l-accent" : ""} p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4`}
+            <button
+              key={e.name}
+              type="button"
+              onClick={() => setOpen(e.name)}
+              className={`text-left w-full bg-card border border-line hover:border-accent ${e.status === "live" ? "border-l-2 border-l-safe" : ""} p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 transition-colors group`}
             >
-              <div className="md:w-44 shrink-0">
-                <div className="font-mono text-[11px] text-faint tracking-[0.15em] mb-1">{m.stage}</div>
-                <div className="font-display text-lg font-semibold uppercase tracking-wide leading-none">
-                  {m.title}
+              <div className="md:w-56 shrink-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
+                  <span className="font-mono text-[11px] text-faint tracking-[0.12em]">{e.window}</span>
+                </div>
+                <div className="font-display text-lg font-semibold uppercase tracking-wide leading-tight group-hover:text-accent transition-colors">
+                  {e.name}
                 </div>
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-text mb-1">{m.objective}</p>
-                <p className="font-mono text-[11px] text-dim">
-                  奖励 · <span className="text-accent">{m.reward}</span>
-                </p>
-                <div className="h-1.5 bg-line overflow-hidden mt-3">
-                  <div className={`h-full ${meta.bar}`} style={{ width: `${m.progress}%` }} />
-                </div>
+                <p className="text-sm text-text">{e.desc}</p>
+                {e.rewards?.length ? (
+                  <p className="font-mono text-[11px] text-dim mt-1.5 truncate">
+                    奖励 · <span className="text-accent">{e.rewards.join(" · ")}</span>
+                  </p>
+                ) : null}
               </div>
 
-              <div className="md:w-24 shrink-0 flex md:flex-col items-center md:items-end justify-between gap-2">
+              <div className="md:w-28 shrink-0 flex md:flex-col items-center md:items-end justify-between gap-2">
+                <Tag variant={tagVariant[e.tag] || "default"}>{e.tag}</Tag>
                 <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-1 border ${meta.cls}`}>
                   {meta.label}
                 </span>
-                <span className="font-mono text-sm text-text">{m.progress}%</span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
+
+      <Modal
+        open={!!active}
+        onClose={() => setOpen(null)}
+        index={active ? `// ${currentSeason.name} · 活动` : ""}
+        title={active?.name || ""}
+      >
+        {active ? <EventDetail e={active} /> : null}
+      </Modal>
     </Section>
   );
 }

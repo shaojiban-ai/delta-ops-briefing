@@ -29,16 +29,27 @@ jobs:
           node-version: 20
 
       - name: 抓取每日密码
+        env:
+          # 官方国际服源需登录态 token，写在仓库 Secrets 里（任选其一）。
+          # 未配置时脚本自动回退到免 token 源，不会报错。
+          DF_REQ_JSON: ${{ secrets.DF_REQ_JSON }}
+          DF_URL: ${{ secrets.DF_URL }}
+          DF_METHOD: ${{ secrets.DF_METHOD }}
+          DF_HEADERS: ${{ secrets.DF_HEADERS }}
+          DF_BODY: ${{ secrets.DF_BODY }}
         run: node scripts/crawl-daily-codes.mjs
+
+      - name: 抓取官方资讯
+        run: node scripts/crawl-news.mjs
 
       - name: 提交更新（仅当有变化）
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain public/data/daily-codes.json)" ]; then
-            git add public/data/daily-codes.json
-            git commit -m "chore(codes): 更新每日密码 $(date -u +%Y-%m-%d)"
+          git add public/data/daily-codes.json public/data/news.json
+          if [ -n "$(git status --porcelain public/data/daily-codes.json public/data/news.json)" ]; then
+            git commit -m "chore(data): 更新每日密码与官方资讯 $(date -u +%Y-%m-%d)"
             git push
           else
-            echo "密码无变化，跳过提交。"
+            echo "数据无变化，跳过提交。"
           fi

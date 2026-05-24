@@ -17,6 +17,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const OUT_FILE = resolve(ROOT, "public/data/daily-codes.json");
 
+// 本地运行时自动加载根目录 .env（官方源 token 等）。
+// 云端 GitHub Actions 用 Secrets 直接注入环境变量，没有 .env 文件，跳过即可。
+try {
+  process.loadEnvFile(resolve(ROOT, ".env"));
+} catch {
+  /* 无 .env 文件：忽略，改由进程环境变量提供（CI / Secrets） */
+}
+
 const SOURCE = {
   name: "素颜API",
   url: "https://api.suyanw.cn/api/delta_mima.php",
@@ -223,10 +231,24 @@ async function main() {
   //   官方抓包请求(DF_*) > 素颜API(国服回退)
   const inputFile = getOpt("--input");
   const officialReq = getOfficialReq();
-  const OFFICIAL_URL = "https://www.playdeltaforce.com/api/proxy/logicial/DfTools/GetPrivateRoomKey";
+  const OFFICIAL_HOME = "https://www.playdeltaforce.com/events/hq/en/";
+  // 去掉 URL 上的查询串（官方签名 u/ts/s 等于登录凭证），绝不写进会提交到仓库的 JSON
+  const stripQuery = (u) => {
+    try {
+      const x = new URL(u);
+      return `${x.origin}${x.pathname}`;
+    } catch {
+      return OFFICIAL_HOME;
+    }
+  };
   const activeSource =
     inputFile || officialReq
-      ? { name: "官方 HQ · GetPrivateRoomKey", url: officialReq?.url || OFFICIAL_URL, server: "intl" }
+      ? {
+          name: "官方 HQ · GetPrivateRoomKey",
+          homepage: OFFICIAL_HOME,
+          url: officialReq?.url ? stripQuery(officialReq.url) : OFFICIAL_HOME,
+          server: "intl",
+        }
       : SOURCE;
 
   let result;

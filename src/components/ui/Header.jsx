@@ -1,10 +1,10 @@
 const NAV = [
   { id: "maps", label: "房间密码" },
-  { id: "missions", label: "赛季任务" },
+  { id: "missions", label: "当前赛季" },
   { id: "loadouts", label: "卡战备" },
   { id: "dept", label: "特勤处" },
   { id: "items", label: "活动物品" },
-  { id: "news", label: "热门资讯" },
+  { id: "news", label: "官方资讯" },
 ];
 
 export default function Header() {
