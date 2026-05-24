@@ -18,10 +18,10 @@ export default function Header() {
           </div>
           <div>
             <h1 className="font-display font-bold text-xl sm:text-2xl md:text-[28px] leading-none tracking-wide text-text">
-              DELTA OPS <span className="text-accent">//</span> 作战简报
+              DELTA FORCE <span className="text-accent">//</span> BRIEFING
             </h1>
             <div className="font-mono text-[10px] md:text-[11px] text-accent tracking-[0.2em] mt-1.5 uppercase">
-              三角洲行动 · 国际服攻略站
+              三角洲简报 · 国际服攻略
             </div>
           </div>
         </div>

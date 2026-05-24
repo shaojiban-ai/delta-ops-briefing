@@ -1,0 +1,40 @@
+name: 每周卡战备成本 / Weekly Loadouts
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"   # 每周一 UTC 04:00（= 北京周一 12:00）
+  workflow_dispatch: {}    # 允许手动触发
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-loadouts
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: 重算卡战备成本
+        run: node scripts/build-loadouts.mjs
+
+      - name: 提交更新（仅当有变化）
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/loadouts.json
+          if [ -n "$(git status --porcelain public/data/loadouts.json)" ]; then
+            git commit -m "chore(loadouts): 每周校准卡战备成本 $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "卡战备无变化，跳过提交。"
+          fi

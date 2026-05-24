@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "crawl:codes": "node scripts/crawl-daily-codes.mjs",
-    "crawl:news": "node scripts/crawl-news.mjs"
+    "crawl:news": "node scripts/crawl-news.mjs",
+    "build:loadouts": "node scripts/build-loadouts.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -7,7 +7,7 @@ export default function Footer() {
         <a href="#" className="text-dim hover:text-accent transition-colors">投稿</a>
         <a href="#" className="text-dim hover:text-accent transition-colors">RSS</a>
       </div>
-      <div>// 非官方爱好者站点 · DELTA OPS BRIEFING · 2026</div>
+      <div>// 非官方爱好者站点 · DELTA FORCE BRIEFING · 2026</div>
     </footer>
   );
 }
