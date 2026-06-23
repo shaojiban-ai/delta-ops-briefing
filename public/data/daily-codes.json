@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-22T18:57:32.090Z",
+  "updatedAt": "2026-06-23T12:24:36.716Z",
   "dataDate": "6月23日",
   "status": "ok",
   "source": {
@@ -18,7 +18,7 @@
         {
           "room": "每日密码门",
           "location": "主变电站右侧 · 地下管道尽头",
-          "password": "2410",
+          "password": "3065",
           "images": []
         }
       ]
@@ -31,7 +31,7 @@
         {
           "room": "每日密码门",
           "location": "地图右下角标记点附近的地下入口",
-          "password": "0360",
+          "password": "5929",
           "images": []
         }
       ]
@@ -44,7 +44,7 @@
         {
           "room": "每日密码门",
           "location": "哈曼浴场北侧",
-          "password": "4823",
+          "password": "6075",
           "images": []
         }
       ]
@@ -57,7 +57,7 @@
         {
           "room": "每日密码门",
           "location": "工业区 · 组装车间 2F",
-          "password": "6230",
+          "password": "9517",
           "images": []
         }
       ]
@@ -70,7 +70,7 @@
         {
           "room": "每日密码门",
           "location": "监狱行政区 1 楼大厅楼梯拐角",
-          "password": "4232",
+          "password": "6606",
           "images": []
         }
       ]
