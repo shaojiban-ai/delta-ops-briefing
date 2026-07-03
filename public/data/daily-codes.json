@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-02T08:47:12.469Z",
-  "dataDate": "7月2日",
+  "updatedAt": "2026-07-03T06:00:22.125Z",
+  "dataDate": "7月3日",
   "status": "ok",
   "source": {
     "name": "官方 HQ · GetPrivateRoomKey",
@@ -18,7 +18,7 @@
         {
           "room": "每日密码门",
           "location": "主变电站右侧 · 地下管道尽头",
-          "password": "6481",
+          "password": "5936",
           "images": []
         }
       ]
@@ -31,7 +31,7 @@
         {
           "room": "每日密码门",
           "location": "地图右下角标记点附近的地下入口",
-          "password": "6615",
+          "password": "5883",
           "images": []
         }
       ]
@@ -44,7 +44,7 @@
         {
           "room": "每日密码门",
           "location": "哈曼浴场北侧",
-          "password": "2382",
+          "password": "3317",
           "images": []
         }
       ]
@@ -57,7 +57,7 @@
         {
           "room": "每日密码门",
           "location": "工业区 · 组装车间 2F",
-          "password": "6357",
+          "password": "1613",
           "images": []
         }
       ]
@@ -70,7 +70,7 @@
         {
           "room": "每日密码门",
           "location": "监狱行政区 1 楼大厅楼梯拐角",
-          "password": "2517",
+          "password": "3787",
           "images": []
         }
       ]
