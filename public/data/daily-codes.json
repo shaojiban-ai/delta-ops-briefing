@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-06T07:58:48.112Z",
+  "updatedAt": "2026-07-06T10:05:11.292Z",
   "dataDate": "7月6日",
   "status": "ok",
   "source": {
@@ -71,6 +71,19 @@
           "room": "每日密码门",
           "location": "监狱行政区 1 楼大厅楼梯拐角",
           "password": "0232",
+          "images": []
+        }
+      ]
+    },
+    {
+      "map": "az3",
+      "code": "",
+      "en": "",
+      "rooms": [
+        {
+          "room": "每日密码门",
+          "location": "",
+          "password": "2700",
           "images": []
         }
       ]
