@@ -1,14 +1,15 @@
 {
-  "updatedAt": "2026-08-02T06:15:49.569Z",
+  "updatedAt": "2026-08-02T08:11:33.107Z",
   "dataDate": "8月2日",
-  "status": "ok",
+  "status": "error",
   "source": {
     "name": "官方 HQ · GetPrivateRoomKey",
     "homepage": "https://www.playdeltaforce.com/events/hq/en/",
     "url": "https://sg-act.playerinfinite.com/api/proxy_direct/logicial/DfTools/GetPrivateRoomKey",
     "server": "intl"
   },
-  "note": "",
+  "note": "抓取失败，展示上一次成功的数据",
+  "lastError": "fetch failed",
   "maps": [
     {
       "map": "零号大坝",
