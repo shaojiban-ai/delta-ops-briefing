@@ -1,15 +1,14 @@
 {
-  "updatedAt": "2026-08-02T08:11:33.107Z",
-  "dataDate": "8月2日",
-  "status": "error",
+  "updatedAt": "2026-08-03T05:49:33.056Z",
+  "dataDate": "8月3日",
+  "status": "ok",
   "source": {
     "name": "官方 HQ · GetPrivateRoomKey",
     "homepage": "https://www.playdeltaforce.com/events/hq/en/",
     "url": "https://sg-act.playerinfinite.com/api/proxy_direct/logicial/DfTools/GetPrivateRoomKey",
     "server": "intl"
   },
-  "note": "抓取失败，展示上一次成功的数据",
-  "lastError": "fetch failed",
+  "note": "",
   "maps": [
     {
       "map": "零号大坝",
@@ -19,7 +18,7 @@
         {
           "room": "每日密码门",
           "location": "主变电站右侧 · 地下管道尽头",
-          "password": "8481",
+          "password": "9390",
           "images": []
         }
       ]
@@ -32,7 +31,7 @@
         {
           "room": "每日密码门",
           "location": "地图右下角标记点附近的地下入口",
-          "password": "8615",
+          "password": "0062",
           "images": []
         }
       ]
@@ -45,7 +44,7 @@
         {
           "room": "每日密码门",
           "location": "哈曼浴场北侧",
-          "password": "4382",
+          "password": "2341",
           "images": []
         }
       ]
@@ -58,7 +57,7 @@
         {
           "room": "每日密码门",
           "location": "工业区 · 组装车间 2F",
-          "password": "8357",
+          "password": "4878",
           "images": []
         }
       ]
@@ -71,7 +70,7 @@
         {
           "room": "每日密码门",
           "location": "监狱行政区 1 楼大厅楼梯拐角",
-          "password": "4517",
+          "password": "3958",
           "images": []
         }
       ]
@@ -84,7 +83,7 @@
         {
           "room": "每日密码门",
           "location": "",
-          "password": "6600",
+          "password": "8405",
           "images": []
         }
       ]
