@@ -1,10 +1,51 @@
 {
-  "updatedAt": "2026-08-17T03:07:01.403Z",
+  "updatedAt": "2026-08-17T04:08:34.518Z",
   "source": {
     "name": "Delta Force 官方资讯",
     "url": "https://www.playdeltaforce.com/en/news/",
     "server": "intl"
   },
-  "count": 0,
-  "items": []
+  "count": 5,
+  "items": [
+    {
+      "title": "Announcement | Update - May 29 | Victory Unite Mode and New Events",
+      "summary": "Dear Operators, We are planning an update on May 29. Victory Unite mode will go live, and the mobile-exclusive Space City Normal Operation will open. There will be no downtime, and gameplay and matchmaking will not be affected during the update. If you encounter any issues after the update, try restarting the game to complete the update. The main highlights of this update include: ●Victory Unite Date: 5/30- 7/8Event Rules: Warfare now features the new Victory Unite mode. Players must meet certai",
+      "image": "https://sg-deltaforce.playerinfinite.com/cms/nrft/feeds/pic/_70b6a66e65689f42753eafe366252ed9775ccf19-1920x1080-ori_s_80_50_ori_q_80.jpeg",
+      "url": "https://www.playdeltaforce.com/en/detail/news-announcement-update-may-29-victory-unite-mode-and-new-events.html",
+      "tag": "更新",
+      "date": "2026-05-29"
+    },
+    {
+      "title": "Announcement | Update - May 15 | Eclipse Vigil Mid-Season Update Overview",
+      "summary": "Dear Operators, We’ll be rolling out an update on 5/15 with no downtime. Gameplay and matchmaking will not be affected. If you encounter any issues after the update, please restart the game to complete the update. The main highlights of this update include: Event in Both Modes● Event Pass Date: 5/16 - 6/12Details: Play matches, earn Event EXP, and earn cool rewards!Rewards: Firearm Appearance: M1014 - Forest Hunter, plus 20 Armament Vouchers! ● New Weapon Date: 5/16 - 5/29Details: The new K437 w",
+      "image": "https://sg-deltaforce.playerinfinite.com/cms/nrft/feeds/pic/_fd639d2c904811d8af74ae00bded55226733c444-1920x1080-ori_s_80_50_ori_q_80.jpeg",
+      "url": "https://www.playdeltaforce.com/en/detail/news-announcement-update-may-15-eclipse-vigil-mid-season-update-overview.html",
+      "tag": "赛季",
+      "date": "2026-05-15"
+    },
+    {
+      "title": "Mid-Season Update | Balance Adjustments, Free Epic Appearance, Warfare 4v4 Showdown, Iridescent Plume Appearance Lucky Draw, and More",
+      "summary": "Dear Operators, We're planning an update on March 5. There will be no downtime, and gameplay and matchmaking will not be affected during the update. If you encounter any issues after the update, try restarting the game to complete the update. If your game client is out of date, you'll need to update to the latest version to log in. The main highlights of this update include: Mid-Season Events● Free Epic Gun Event Time: 3/6–3/26Event Rules: Participate in various Operations missions to earn toke",
+      "image": "https://sg-deltaforce.playerinfinite.com/cms/nrft/feeds/pic/_37b7492edac35fc3c90399b89c790ed9d8ab2f7e-1920x1080-ori_s_80_50_ori_q_80.jpeg",
+      "url": "https://www.playdeltaforce.com/en/detail/news-midseason-update-balance-adjustments-free-epic-appearance-warfare-4v4-showdown-iridescent-plume-appearance-lucky-draw-and-more.html",
+      "tag": "更新",
+      "date": "2026-03-05"
+    },
+    {
+      "title": "Version Update | New Season \"Morphosis\" Events & Rewards & Store Updates Overview",
+      "summary": "Dear Operators, We're rolling out a no-downtime update for PC, mobile, and console on February 3 to launch our brand-new season: Morphosis!Once the update goes live, jump into the game to check out all the new \"Morphosis\" season modes and content, and claim some awesome rewards!If you encounter any issues after the update, try restarting the game to complete the update.The main content of this update includes: Version Update Reward Events● Event Pass Event Time: 2/3–3/5Details: To celebrate the",
+      "image": "https://sg-deltaforce.playerinfinite.com/cms/nrft/feeds/pic/_05cbb9faceadfe8edffe30ccaaf687f054bc1479-1920x1080-ori_s_80_50_ori_q_80.jpeg",
+      "url": "https://www.playdeltaforce.com/en/detail/news-version-update-new-season-morphosis-events-rewards-store-updates-overview.html",
+      "tag": "赛季",
+      "date": "2026-02-03"
+    },
+    {
+      "title": "Update | End-of-Season Armament Voucher Giveaway, Dark Sentinel Series Appearances Launch on Mobile & Console",
+      "summary": "Dear Operators, We're planning an update on January 22. There will be no downtime, and gameplay and matchmaking will not be affected during the update. If you encounter any issues after the update, try restarting the game to complete the update. If your game client is out of date, you'll need to update to the latest version to log in. The main highlights of this update include: Event in Both Modes● Armament Voucher Giveaway Date: 1/23 - 2/2How to claim: Play the game to earn rewards.Rewards: Com",
+      "image": "https://sg-deltaforce.playerinfinite.com/cms/nrft/feeds/pic/_b6e390ed748695ed8d3c18f20b33a14769e653b6-1920x1080-ori_s_80_50_ori_q_80.jpeg",
+      "url": "https://www.playdeltaforce.com/en/detail/news-update-endofseason-armament-voucher-giveaway-dark-sentinel-series-appearances-launch-on-mobile-console.html",
+      "tag": "活动",
+      "date": "2026-01-22"
+    }
+  ]
 }
